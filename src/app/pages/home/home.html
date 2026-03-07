@@ -1,0 +1,50 @@
+<!-- Hero Section -->
+<section class="mx-auto max-w-6xl px-6 py-24 md:py-32">
+  <div class="flex flex-col items-center gap-16 md:flex-row md:items-center md:gap-12">
+    <!-- Left: Copy -->
+    <div class="flex flex-col items-start gap-6 md:w-1/2">
+      <!-- Badge -->
+      <span
+        class="inline-flex items-center rounded-full border border-border bg-muted px-3 py-1 text-xs font-medium text-muted-foreground tracking-wide"
+      >
+        Study smarter, not harder
+      </span>
+
+      <!-- Headline -->
+      <h1
+        class="text-4xl font-semibold tracking-tight text-foreground md:text-5xl lg:text-[3.5rem] lg:leading-[1.1]"
+      >
+        Plan. Collaborate.<br />
+        <span class="text-primary">Achieve more.</span>
+      </h1>
+
+      <!-- Subheadline -->
+      <p class="text-base text-muted-foreground leading-relaxed md:text-lg max-w-md">
+        Cadence helps students plan study sessions intelligently, collaborate with peers in
+        real-time groups, and track productivity with deep analytics.
+      </p>
+
+      <!-- CTAs -->
+      <div class="flex flex-wrap items-center gap-3 pt-2">
+        <a routerLink="/sign-up">
+          <button hlmBtn size="lg" class="px-6">Get Started</button>
+        </a>
+        <a routerLink="/how-it-works">
+          <button hlmBtn variant="outline" size="lg" class="px-6">See how it works</button>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right: Illustration -->
+    <div class="w-full md:w-1/2">
+      <img
+        ngSrc="hero.png"
+        alt="Cadence study platform illustration"
+        width="1132"
+        height="838"
+        priority
+        class="w-full h-auto rounded-xl border border-border"
+      />
+    </div>
+  </div>
+</section>
