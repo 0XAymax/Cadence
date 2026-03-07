@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgOptimizedImage } from '@angular/common';
 import { HlmButtonImports } from '../../../components/ui/button/src';
+import { LogoComponent } from "../logo/Logo";
 
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, NgOptimizedImage, ...HlmButtonImports],
+  imports: [RouterLink, ...HlmButtonImports, LogoComponent],
   templateUrl: './navbar.html',
 })
 export class Navbar {}

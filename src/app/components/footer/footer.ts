@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { NgOptimizedImage } from '@angular/common';
 import { HlmSeparatorImports } from '../../../components/ui/separator/src';
+import { LogoComponent } from "../logo/Logo";
 
 @Component({
   selector: 'app-footer',
-  imports: [RouterLink, NgOptimizedImage, ...HlmSeparatorImports],
+  imports: [RouterLink, ...HlmSeparatorImports, LogoComponent],
   templateUrl: './footer.html',
 })
 export class Footer {
