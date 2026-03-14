@@ -1,17 +1,11 @@
 import { Component } from '@angular/core';
+import { InboxHeader } from '../../../components/user/inbox/inbox-header/inbox-header';
+import { InboxFilters } from '../../../components/user/inbox/inbox-filters/inbox-filters';
+import { NotificationsList } from '../../../components/user/inbox/notifications-list/notifications-list';
 
 @Component({
   selector: 'app-inbox',
-  template: `
-    <div class="flex h-full flex-col items-center justify-center gap-4">
-      <div class="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
-        <p>INBOX</p>
-      </div>
-      <div class="text-center">
-        <h2 class="text-lg font-semibold">No messages</h2>
-        <p class="text-sm text-muted-foreground">You have no messages in your inbox.</p>
-      </div>
-    </div>
-  `,
+  imports: [InboxHeader, InboxFilters, NotificationsList],
+  templateUrl: './inbox.html',
 })
 export class Inbox {}
