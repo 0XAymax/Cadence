@@ -1,0 +1,28 @@
+<div hlmCard class="border border-border rounded-xl shadow-none h-full">
+  <div hlmCardContent class="p-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-sm font-semibold text-foreground">Group Activity</h3>
+      <a href="#" class="text-xs text-muted-foreground hover:text-foreground transition-colors"
+        >View all</a
+      >
+    </div>
+
+    <div class="flex flex-col divide-y divide-border">
+      @for (activity of activities; track activity.time) {
+        <div class="py-3 first:pt-0 last:pb-0">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex-1 min-w-0">
+              <p class="text-xs text-muted-foreground mb-0.5">{{ activity.group }}</p>
+              <p class="text-sm text-foreground">
+                <span class="font-medium">{{ activity.user }}</span>
+                {{ activity.action }}
+                <span class="font-medium">{{ activity.target }}</span>
+              </p>
+            </div>
+            <span class="text-xs text-muted-foreground shrink-0">{{ activity.time }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

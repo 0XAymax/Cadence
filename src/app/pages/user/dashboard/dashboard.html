@@ -1,4 +1,32 @@
-<div>
-  <h1 class="text-2xl font-semibold tracking-tight text-foreground">Dashboard</h1>
-  <p class="text-sm text-muted-foreground mt-1">Welcome back.</p>
+<div class="flex flex-col gap-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-xl font-semibold tracking-tight text-foreground">Good morning, Aymane </h1>
+      <p class="text-sm text-muted-foreground mt-0.5">Saturday, March 14, 2026</p>
+    </div>
+    <button hlmBtn size="sm" class="gap-2">
+      <lucide-angular [img]="Sparkles" class="w-4 h-4" />
+      Generate Schedule
+    </button>
+  </div>
+
+  <!-- Stats -->
+  <app-stats-cards />
+
+  <!-- Row 2: Schedule + Goals -->
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+    <div class="lg:col-span-2">
+      <app-todays-schedule />
+    </div>
+    <div>
+      <app-goals-progress />
+    </div>
+  </div>
+
+  <!-- Row 3: Group Activity + Deadlines -->
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+    <app-group-activity />
+    <app-upcoming-deadlines />
+  </div>
 </div>
