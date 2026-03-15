@@ -27,7 +27,8 @@
       "@spartan-ng/helm/sidebar": ["./src/components/ui/sidebar/src/index.ts"],
       "@spartan-ng/helm/sheet": ["./src/components/ui/sheet/src/index.ts"],
       "@spartan-ng/helm/skeleton": ["./src/components/ui/skeleton/src/index.ts"],
-      "@spartan-ng/helm/tooltip": ["./src/components/ui/tooltip/src/index.ts"]
+      "@spartan-ng/helm/tooltip": ["./src/components/ui/tooltip/src/index.ts"],
+      "@spartan-ng/helm/switch": ["./src/components/ui/switch/src/index.ts"]
     }
   },
   "angularCompilerOptions": {

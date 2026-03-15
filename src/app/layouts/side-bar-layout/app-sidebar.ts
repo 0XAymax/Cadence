@@ -78,6 +78,11 @@ export class AppSidebar {
       icon: 'lucideGoal',
     },
     {
+      title: 'Availability',
+      url: 'availability',
+      icon: 'lucideGoal',
+    },
+    {
       title: 'Settings',
       url: 'settings',
       icon: 'lucideSettings',
