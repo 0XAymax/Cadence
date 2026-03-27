@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { SubjTask } from '../../../../pages/user/study-map/study-map';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { LucideAngularModule, MoreVertical, Clock } from 'lucide-angular';
@@ -21,12 +21,12 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
   templateUrl: './task-item.html',
 })
 export class TaskItemComponent {
-  @Input() task!: SubjTask;
+  task = input.required<SubjTask>();
 
   protected MoreVertical = MoreVertical;
   protected Clock = Clock;
 
   toggleCompletion() {
-    this.task.completed = !this.task.completed;
+    this.task().completed = !this.task().completed;
   }
 }

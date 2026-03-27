@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, input, output } from '@angular/core';
 import { SubjDoc, SubjGoal } from '../../../../pages/user/study-map/study-map';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -27,9 +27,9 @@ import { GoalFormComponent } from '../goal-form/goal-form';
   templateUrl: './subject-card.html',
 })
 export class SubjectCardComponent {
-  @Input() subject!: SubjDoc;
-  @Input() isExpanded: boolean = false;
-  @Output() toggleExpand = new EventEmitter<void>();
+  subject = input.required<SubjDoc>();
+  isExpanded = input<boolean>(false);
+  toggleExpand = output<void>();
 
   protected ChevronDown = ChevronDown;
   protected ChevronRight = ChevronRight;
@@ -47,7 +47,7 @@ export class SubjectCardComponent {
   }
 
   getBorderColor() {
-    switch (this.subject.priority) {
+    switch (this.subject().priority) {
       case 'HIGH':
         return 'border-l-destructive';
       case 'MEDIUM':
@@ -60,7 +60,7 @@ export class SubjectCardComponent {
   }
 
   getBadgeVariant() {
-    switch (this.subject.priority) {
+    switch (this.subject().priority) {
       case 'HIGH':
         return 'destructive';
       case 'MEDIUM':

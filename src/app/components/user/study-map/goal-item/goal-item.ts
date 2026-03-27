@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, input, output } from '@angular/core';
 import { SubjGoal } from '../../../../pages/user/study-map/study-map';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import {
@@ -35,9 +35,9 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
   templateUrl: './goal-item.html',
 })
 export class GoalItemComponent {
-  @Input() goal!: SubjGoal;
-  @Input() isExpanded: boolean = false;
-  @Output() toggleExpand = new EventEmitter<void>();
+  goal = input.required<SubjGoal>();
+  isExpanded = input<boolean>(false);
+  toggleExpand = output<void>();
 
   protected ChevronDown = ChevronDown;
   protected ChevronRight = ChevronRight;

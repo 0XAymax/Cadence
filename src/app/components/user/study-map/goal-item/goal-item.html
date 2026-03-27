@@ -6,13 +6,13 @@
   >
     <div class="flex-1 min-w-0">
       <div class="flex items-center gap-2 mb-1.5">
-        <h4 class="font-medium text-sm text-foreground truncate">{{ goal.title }}</h4>
+        <h4 class="font-medium text-sm text-foreground truncate">{{ goal().title }}</h4>
       </div>
 
       <!-- Progress row -->
       <div class="flex items-center gap-3">
-        <hlm-progress [value]="goal.progress" class="h-2 w-full max-w-50"></hlm-progress>
-        <span class="text-xs text-muted-foreground whitespace-nowrap">{{ goal.progress }}%</span>
+        <hlm-progress [value]="goal().progress" class="h-2 w-full max-w-50"></hlm-progress>
+        <span class="text-xs text-muted-foreground whitespace-nowrap">{{ goal().progress }}%</span>
       </div>
     </div>
 
@@ -21,11 +21,11 @@
     >
       <div class="flex items-center gap-1.5" title="Target hours per week">
         <lucide-angular [img]="Clock" class="h-3.5 w-3.5" />
-        {{ goal.targetHoursPerWeek }}h/wk
+        {{ goal().targetHoursPerWeek }}h/wk
       </div>
       <div class="flex items-center gap-1.5" title="Deadline">
         <lucide-angular [img]="Calendar" class="h-3.5 w-3.5" />
-        {{ goal.deadline | date: 'shortDate' }}
+        {{ goal().deadline | date: 'shortDate' }}
       </div>
 
       <div class="flex items-center gap-1 ml-2" (click)="$event.stopPropagation()">
@@ -45,23 +45,23 @@
           class="h-7 w-7 text-muted-foreground"
           (click)="toggleExpand.emit()"
         >
-          <lucide-angular [img]="isExpanded ? ChevronDown : ChevronRight" class="h-4 w-4" />
+          <lucide-angular [img]="isExpanded() ? ChevronDown : ChevronRight" class="h-4 w-4" />
         </button>
       </div>
     </div>
   </div>
 
   <!-- Expanded Content (Tasks) -->
-  @if (isExpanded) {
+  @if (isExpanded()) {
     <div class="px-4 pb-4 bg-muted/10 border-t border-border/50">
       <div class="flex items-center justify-between py-3">
         <h5 class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tasks</h5>
       </div>
 
       <!-- Tasks List -->
-      @if (goal.tasks.length > 0) {
+      @if (goal().tasks.length > 0) {
         <div class="flex flex-col gap-1">
-          @for (task of goal.tasks; track task.id) {
+          @for (task of goal().tasks; track task.id) {
             <app-task-item [task]="task" />
           }
         </div>
@@ -90,7 +90,7 @@
           <hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col gap-6 p-6">
             <div hlmSheetHeader side="right">
               <h2 hlmSheetTitle class="text-lg">Create task</h2>
-              <p hlmSheetDescription class="text-sm">Add a task to "{{ goal.title }}".</p>
+              <p hlmSheetDescription class="text-sm">Add a task to "{{ goal().title }}".</p>
             </div>
             <app-task-form />
             <div hlmSheetFooter class="mt-2 flex flex-row items-center justify-end gap-3">

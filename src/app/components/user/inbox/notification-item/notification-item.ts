@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { LucideAngularModule, LucideIconData } from 'lucide-angular';
 
@@ -16,5 +16,5 @@ export interface NotificationItemData {
   templateUrl: './notification-item.html',
 })
 export class NotificationItem {
-  @Input() item!: NotificationItemData;
+  item = input.required<NotificationItemData>();
 }

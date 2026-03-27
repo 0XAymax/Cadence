@@ -5,12 +5,12 @@
   >
     <div class="flex-1">
       <div class="flex flex-wrap items-center gap-2 mb-1">
-        <h3 class="font-semibold text-foreground text-lg">{{ subject.name }}</h3>
+        <h3 class="font-semibold text-foreground text-lg">{{ subject().name }}</h3>
         <hlm-badge [variant]="getBadgeVariant()" class="text-[10px] h-5 px-2">{{
-          subject.priority
+          subject().priority
         }}</hlm-badge>
       </div>
-      <p class="text-sm text-muted-foreground">{{ subject.description }}</p>
+      <p class="text-sm text-muted-foreground">{{ subject().description }}</p>
     </div>
 
     <div class="flex items-center gap-2" (click)="$event.stopPropagation()">
@@ -30,13 +30,13 @@
         class="h-8 w-8 text-muted-foreground"
         (click)="toggleExpand.emit()"
       >
-        <lucide-angular [img]="isExpanded ? ChevronDown : ChevronRight" class="h-5 w-5" />
+        <lucide-angular [img]="isExpanded() ? ChevronDown : ChevronRight" class="h-5 w-5" />
       </button>
     </div>
   </div>
 
   <!-- Expanded Content (Goals) -->
-  @if (isExpanded) {
+  @if (isExpanded()) {
     <div class="px-4 pb-5 sm:px-5 sm:pb-5 pt-0 border-t border-border/50 bg-muted/20">
       <div class="flex items-center justify-between mb-4 mt-4">
         <h4 class="text-sm font-medium text-foreground">Goals</h4>
@@ -59,7 +59,7 @@
             <div hlmSheetHeader side="right">
               <h2 hlmSheetTitle class="text-lg">Create goal</h2>
               <p hlmSheetDescription class="text-sm">
-                Add a new learning goal to {{ subject.name }}.
+                Add a new learning goal to {{ subject().name }}.
               </p>
             </div>
             <app-goal-form />
@@ -72,9 +72,9 @@
       </div>
 
       <!-- Goals List -->
-      @if (subject.goals.length > 0) {
+      @if (subject().goals.length > 0) {
         <div class="flex flex-col gap-3">
-          @for (goal of subject.goals; track goal.id) {
+          @for (goal of subject().goals; track goal.id) {
             <app-goal-item
               [goal]="goal"
               [isExpanded]="expandedGoalId === goal.id"
