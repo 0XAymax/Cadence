@@ -33,7 +33,7 @@ export class GroupsComponent {
   }
 
   navigateToGroup(groupId: string) {
-    this.router.navigate(['/groups', groupId]);
+    this.router.navigate(['/user/groups', groupId]);
   }
 
   joinGroup(groupId: string) {
