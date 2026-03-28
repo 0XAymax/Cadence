@@ -128,6 +128,11 @@ export class AppSidebar {
       icon: 'lucideClock',
     },
     {
+      title: 'Weekly Plan',
+      url: 'weekly-plan',
+      icon: 'lucideCalendar',
+    },
+    {
       title: 'Availability',
       url: 'availability',
       icon: 'lucideCalendar',

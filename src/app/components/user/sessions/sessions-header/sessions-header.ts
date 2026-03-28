@@ -10,7 +10,7 @@ import { LucideAngularModule, Plus, Calendar, List } from 'lucide-angular';
   templateUrl: './sessions-header.html',
 })
 export class SessionsHeaderComponent {
-  viewMode = input<'calendar' | 'list'>('calendar');
+  viewMode = input<'calendar' | 'list'>('list');
   viewModeChange = output<'calendar' | 'list'>();
   addSession = output<void>();
 

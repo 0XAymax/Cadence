@@ -19,7 +19,7 @@ import { AppSession } from '../../../core/models/session.model';
   templateUrl: './sessions.html',
 })
 export class SessionsComponent {
-  viewMode: 'calendar' | 'list' = 'calendar';
+  viewMode: 'calendar' | 'list' = 'list';
 
   @ViewChild('sessionSheet') sessionSheet!: SessionSheetComponent;
 

@@ -9,16 +9,6 @@
     <div class="bg-muted p-1 rounded-md flex items-center gap-1">
       <button
         hlmBtn
-        [variant]="viewMode() === 'calendar' ? 'default' : 'ghost'"
-        size="sm"
-        class="h-8 px-3 gap-2"
-        (click)="viewModeChange.emit('calendar')"
-      >
-        <lucide-angular [img]="CalendarIcon" class="h-4 w-4" />
-        Calendar
-      </button>
-      <button
-        hlmBtn
         [variant]="viewMode() === 'list' ? 'default' : 'ghost'"
         size="sm"
         class="h-8 px-3 gap-2"
@@ -26,6 +16,16 @@
       >
         <lucide-angular [img]="ListIcon" class="h-4 w-4" />
         List
+      </button>
+      <button
+        hlmBtn
+        [variant]="viewMode() === 'calendar' ? 'default' : 'ghost'"
+        size="sm"
+        class="h-8 px-3 gap-2"
+        (click)="viewModeChange.emit('calendar')"
+      >
+        <lucide-angular [img]="CalendarIcon" class="h-4 w-4" />
+        Calendar
       </button>
     </div>
     <button hlmBtn size="sm" class="gap-2 shadow-sm" (click)="addSession.emit()">
