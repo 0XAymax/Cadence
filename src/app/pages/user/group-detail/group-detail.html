@@ -80,7 +80,9 @@
 
       <!-- CHAT TAB -->
       <div hlmTabsContent="chat" class="mt-4 border rounded-lg bg-card">
-        <app-group-chat-tab [currentUserId]="groupService.currentUserId"> </app-group-chat-tab>
+        @if(groupId()){
+          <app-group-chat-tab [currentUserId]="groupService.currentUserId" [groupId]="groupId()"> </app-group-chat-tab>
+        }
       </div>
 
       <!-- SETTINGS TAB (Admin Only via routing/permissions, but guarded by visibility or mock) -->

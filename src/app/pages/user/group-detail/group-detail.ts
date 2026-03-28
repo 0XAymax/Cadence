@@ -9,8 +9,8 @@ import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { ShareSessionDialogComponent } from '../../../components/user/group-detail/share-session-dialog/share-session-dialog';
 import { GroupFeedCardComponent } from '../../../components/user/group-detail/group-feed-card/group-feed-card';
 import { GroupMembersTabComponent } from '../../../components/user/group-detail/group-members-tab/group-members-tab';
-import { GroupChatTabComponent } from '../../../components/user/group-detail/group-chat-tab';
-import { GroupSettingsTabComponent } from '../../../components/user/group-detail/group-settings-tab';
+import { GroupChatTabComponent } from '../../../components/user/group-detail/group-chat-tab/group-chat-tab';
+import { GroupSettingsTabComponent } from '../../../components/user/group-detail/group-settings-tab/group-settings-tab';
 
 @Component({
   selector: 'app-group-detail-page',
