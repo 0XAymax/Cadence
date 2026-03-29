@@ -1,23 +1,74 @@
-<div class="grid gap-6">
-  <div class="grid gap-2.5">
-    <label hlmLabel for="subject-name">Subject name</label>
-    <input hlmInput id="subject-name" placeholder="e.g. Mathematics" />
+<hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col gap-6 p-6">
+  <div hlmSheetHeader side="right">
+    <h2 hlmSheetTitle class="text-lg">Create subject</h2>
+    <p hlmSheetDescription class="text-sm">Add a new subject to organize your goals and tasks.</p>
   </div>
+  <form [formRoot]="subjectForm" novalidate>
+    <div class="grid gap-6">
+      <div class="grid gap-2.5">
+        <label hlmLabel for="subject-name">Subject name</label>
+        <input
+          hlmInput
+          id="subject-name"
+          placeholder="e.g. Mathematics"
+          [formField]="subjectForm.subjectName"
+        />
+        @if (subjectForm.subjectName().touched() && subjectForm.subjectName().invalid()) {
+          <p class="text-xs text-destructive">
+            @for (error of subjectForm.subjectName().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </p>
+        }
+      </div>
 
-  <div class="grid gap-2.5">
-    <label hlmLabel for="subject-description">Description</label>
-    <input hlmInput id="subject-description" placeholder="Optional short note" />
-  </div>
+      <div class="grid gap-2.5">
+        <label hlmLabel for="subject-description">Description</label>
+        <input
+          hlmInput
+          id="subject-description"
+          placeholder="Optional short note"
+          [formField]="subjectForm.subjectDescription"
+        />
+         @if (subjectForm.subjectDescription().touched() && subjectForm.subjectDescription().invalid()) {
+          <p class="text-xs text-destructive">
+            @for (error of subjectForm.subjectDescription().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </p>
+        }
+      </div>
 
-  <div class="grid gap-2.5">
-    <label hlmLabel for="subject-priority">Priority</label>
-    <select
-      id="subject-priority"
-      class="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm text-foreground"
-    >
-      <option value="HIGH">High</option>
-      <option value="MEDIUM">Medium</option>
-      <option value="LOW">Low</option>
-    </select>
-  </div>
-</div>
+      <div class="grid gap-2.5">
+        <label hlmLabel for="subject-priority">Priority</label>
+        <select
+          id="subject-priority"
+          class="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm text-foreground"
+          [formField]="subjectForm.subjectPriority"
+        >
+          <option value="HIGH">High</option>
+          <option value="MEDIUM">Medium</option>
+          <option value="LOW">Low</option>
+        </select>
+         @if (subjectForm.subjectPriority().touched() && subjectForm.subjectPriority().invalid()) {
+          <p class="text-xs text-destructive">
+            @for (error of subjectForm.subjectPriority().errors(); track error) {
+              <p>{{ error.message }}</p>
+            }
+          </p>
+        }
+      </div>
+    </div>
+    <div hlmSheetFooter class="mt-2 flex flex-row items-center justify-end gap-3">
+      <button hlmBtn variant="outline" size="sm" hlmSheetClose>Cancel</button>
+      <button
+        hlmBtn
+        size="sm"
+        type="submit"
+        [disabled]="subjectForm().submitting() || subjectForm().invalid()"
+      >
+        Create subject
+      </button>
+    </div>
+  </form>
+</hlm-sheet-content>

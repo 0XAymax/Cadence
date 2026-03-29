@@ -17,19 +17,7 @@
     </div>
 
     <!-- Subject Sheet -->
-    <hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col gap-6 p-6">
-      <div hlmSheetHeader side="right">
-        <h2 hlmSheetTitle class="text-lg">Create subject</h2>
-        <p hlmSheetDescription class="text-sm">
-          Add a new subject to organize your goals and tasks.
-        </p>
-      </div>
-      <app-subject-form />
-      <div hlmSheetFooter class="mt-2 flex flex-row items-center justify-end gap-3">
-        <button hlmBtn variant="outline" size="sm" hlmSheetClose>Cancel</button>
-        <button hlmBtn size="sm">Create subject</button>
-      </div>
-    </hlm-sheet-content>
+    <app-subject-form />
   </hlm-sheet>
 
   <!-- Content -->
@@ -61,19 +49,7 @@
         <button hlmBtn size="sm" class="mt-4" hlmSheetTrigger side="right">
           Add your first subject
         </button>
-        <hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col gap-6 p-6">
-          <div hlmSheetHeader side="right">
-            <h2 hlmSheetTitle class="text-lg">Create subject</h2>
-            <p hlmSheetDescription class="text-sm">
-              Add a new subject to organize your goals and tasks.
-            </p>
-          </div>
-          <app-subject-form />
-          <div hlmSheetFooter class="mt-2 flex flex-row items-center justify-end gap-3">
-            <button hlmBtn variant="outline" size="sm" hlmSheetClose>Cancel</button>
-            <button hlmBtn size="sm">Create subject</button>
-          </div>
-        </hlm-sheet-content>
+        <app-subject-form />
       </hlm-sheet>
     </hlm-card>
   }
