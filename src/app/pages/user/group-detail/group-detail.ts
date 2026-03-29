@@ -1,16 +1,16 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GroupService } from '../../../core/services/group.service';
-import { Group } from '../../../core/models/group.model';
+import { GroupService } from '@app/core/services/group.service';
+import { Group } from '@app/core/models/group.model';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
-import { ShareSessionDialogComponent } from '../../../components/user/group-detail/share-session-dialog/share-session-dialog';
-import { GroupFeedCardComponent } from '../../../components/user/group-detail/group-feed-card/group-feed-card';
-import { GroupMembersTabComponent } from '../../../components/user/group-detail/group-members-tab/group-members-tab';
-import { GroupChatTabComponent } from '../../../components/user/group-detail/group-chat-tab/group-chat-tab';
-import { GroupSettingsTabComponent } from '../../../components/user/group-detail/group-settings-tab/group-settings-tab';
+import { ShareSessionDialogComponent } from '@app/components/user/group-detail/share-session-dialog/share-session-dialog';
+import { GroupFeedCardComponent } from '@app/components/user/group-detail/group-feed-card/group-feed-card';
+import { GroupMembersTabComponent } from '@app/components/user/group-detail/group-members-tab/group-members-tab';
+import { GroupChatTabComponent } from '@app/components/user/group-detail/group-chat-tab/group-chat-tab';
+import { GroupSettingsTabComponent } from '@app/components/user/group-detail/group-settings-tab/group-settings-tab';
 
 @Component({
   selector: 'app-group-detail-page',

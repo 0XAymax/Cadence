@@ -1,10 +1,10 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SessionsHeaderComponent } from '../../../components/user/sessions/sessions-header/sessions-header';
-import { SessionsCalendarComponent } from '../../../components/user/sessions/sessions-calendar/sessions-calendar';
-import { SessionsListComponent } from '../../../components/user/sessions/sessions-list/sessions-list';
-import { SessionSheetComponent } from '../../../components/user/sessions/session-sheet/session-sheet';
-import { AppSession } from '../../../core/models/session.model';
+import { SessionsHeaderComponent } from '@app/components/user/sessions/sessions-header/sessions-header';
+import { SessionsCalendarComponent } from '@app/components/user/sessions/sessions-calendar/sessions-calendar';
+import { SessionsListComponent } from '@app/components/user/sessions/sessions-list/sessions-list';
+import { SessionSheetComponent } from '@app/components/user/sessions/session-sheet/session-sheet';
+import { AppSession } from '@app/core/models/session.model';
 
 @Component({
   selector: 'app-sessions',

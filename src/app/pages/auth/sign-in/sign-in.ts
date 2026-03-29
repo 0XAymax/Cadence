@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { LucideAngularModule, Eye, EyeOff, BookOpen } from 'lucide-angular';
-import { HlmButtonImports } from '../../../../components/ui/button/src';
-import { HlmInputImports } from '../../../../components/ui/input/src';
-import { HlmLabelImports } from '../../../../components/ui/label/src';
-import { HlmCardImports } from '../../../../components/ui/card/src';
-import { HlmSeparatorImports } from '../../../../components/ui/separator/src';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { RouterLink } from '@angular/router';
-import { LogoComponent } from '../../../components/logo/Logo';
+import { LogoComponent } from '@app/components/logo/Logo';
 
 @Component({
   selector: 'app-sign-in',

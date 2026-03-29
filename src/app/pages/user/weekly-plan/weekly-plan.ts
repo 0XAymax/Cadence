@@ -2,12 +2,12 @@ import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
-import { AvailabilitySectionComponent } from '../../../components/user/weekly-plan/availability-section/availability-section';
-import { WeeklySummaryComponent } from '../../../components/user/weekly-plan/weekly-summary/weekly-summary';
-import { WeeklyPlanSessionsListComponent } from '../../../components/user/weekly-plan/sessions-list/sessions-list';
-import { GenerateWeekDialogComponent } from '../../../components/user/weekly-plan/generate-week-dialog/generate-week-dialog';
-import { AppSession } from '../../../core/models/session.model';
-import { GoalProgressInfo } from '../../../core/models/weekly-plan.model';
+import { AvailabilitySectionComponent } from '@app/components/user/weekly-plan/availability-section/availability-section';
+import { WeeklySummaryComponent } from '@app/components/user/weekly-plan/weekly-summary/weekly-summary';
+import { WeeklyPlanSessionsListComponent } from '@app/components/user/weekly-plan/sessions-list/sessions-list';
+import { GenerateWeekDialogComponent } from '@app/components/user/weekly-plan/generate-week-dialog/generate-week-dialog';
+import { AppSession } from '@app/core/models/session.model';
+import { GoalProgressInfo } from '@app/core/models/weekly-plan.model';
 
 @Component({
   selector: 'app-weekly-plan',

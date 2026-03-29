@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { LucideAngularModule, Plus } from 'lucide-angular';
-import { SubjectCardComponent } from '../../../components/user/study-map/subject-card/subject-card';
+import { SubjectCardComponent } from '@app/components/user/study-map/subject-card/subject-card';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
-import { SubjectFormComponent } from '../../../components/user/study-map/subject-form/subject-form';
+import { SubjectFormComponent } from '@app/components/user/study-map/subject-form/subject-form';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 
 export interface SubjTask {

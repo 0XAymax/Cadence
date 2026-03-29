@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
-import { HlmButtonImports } from '../../../../components/ui/button/src';
-import { HlmInputImports } from '../../../../components/ui/input/src';
-import { HlmLabelImports } from '../../../../components/ui/label/src';
-import { HlmCardImports } from '../../../../components/ui/card/src';
-import { LogoComponent } from '../../../components/logo/Logo';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
+import { HlmInputImports } from '@spartan-ng/helm/input';
+import { HlmLabelImports } from '@spartan-ng/helm/label';
+import { HlmCardImports } from '@spartan-ng/helm/card';
+import { LogoComponent } from '@app/components/logo/Logo';
 
 @Component({
   selector: 'app-sign-up',

@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { Home } from './pages/home/home';
-import { SignIn } from './pages/auth/sign-in/sign-in';
-import { SignUp } from './pages/auth/sign-up/sign-up';
-import { Forbidden } from './pages/forbidden/forbidden';
-import { NotFound } from './pages/not-found/not-found';
-import { MainLayout } from './layouts/main-layout/main-layout';
+import { Home } from '@app/pages/home/home';
+import { SignIn } from '@app/pages/auth/sign-in/sign-in';
+import { SignUp } from '@app/pages/auth/sign-up/sign-up';
+import { Forbidden } from '@app/pages/forbidden/forbidden';
+import { NotFound } from '@app/pages/not-found/not-found';
+import { MainLayout } from '@app/layouts/main-layout/main-layout';
 
 export const routes: Routes = [
   {

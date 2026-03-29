@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { GroupService } from '../../../core/services/group.service';
-import { GroupCardComponent } from '../../../components/user/groups/group-card/group-card';
-import { CreateGroupDialogComponent } from '../../../components/user/groups/create-group-dialog/create-group-dialog';
+import { GroupService } from '@app/core/services/group.service';
+import { GroupCardComponent } from '@app/components/user/groups/group-card/group-card';
+import { CreateGroupDialogComponent } from '@app/components/user/groups/create-group-dialog/create-group-dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { BrnDialogImports } from '@spartan-ng/brain/dialog';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
