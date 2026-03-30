@@ -68,3 +68,6 @@ export interface RequestItem {
   fullName: string;
   requestedAt: Date;
 }
+
+
+export type GroupData = Omit<Group, 'id'>

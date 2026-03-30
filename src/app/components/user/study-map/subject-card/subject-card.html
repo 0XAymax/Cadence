@@ -40,35 +40,8 @@
     <div class="px-4 pb-5 sm:px-5 sm:pb-5 pt-0 border-t border-border/50 bg-muted/20">
       <div class="flex items-center justify-between mb-4 mt-4">
         <h4 class="text-sm font-medium text-foreground">Goals</h4>
-
         <!-- Add Goal Sheet -->
-        <hlm-sheet>
-          <button
-            hlmBtn
-            size="sm"
-            variant="outline"
-            class="h-8 text-xs gap-1.5"
-            hlmSheetTrigger
-            side="right"
-          >
-            <lucide-angular [img]="Plus" class="h-3.5 w-3.5" />
-            Add goal
-          </button>
-
-          <hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col gap-6 p-6">
-            <div hlmSheetHeader side="right">
-              <h2 hlmSheetTitle class="text-lg">Create goal</h2>
-              <p hlmSheetDescription class="text-sm">
-                Add a new learning goal to {{ subject().name }}.
-              </p>
-            </div>
-            <app-goal-form />
-            <div hlmSheetFooter class="mt-2 flex flex-row items-center justify-end gap-3">
-              <button hlmBtn variant="outline" size="sm" hlmSheetClose>Cancel</button>
-              <button hlmBtn size="sm">Create goal</button>
-            </div>
-          </hlm-sheet-content>
-        </hlm-sheet>
+        <app-goal-form [SubjectName]="subject().name" [subjectId]="subject().id" />
       </div>
 
       <!-- Goals List -->
@@ -100,4 +73,3 @@
     <button hlmMenuItem class="text-destructive">Delete subject</button>
   </hlm-dropdown-menu>
 </ng-template>
-  

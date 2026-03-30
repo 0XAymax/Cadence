@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter, input, output } from '@angular/core';
-import { SubjDoc, SubjGoal } from '../../../../pages/user/study-map/study-map';
+import { Component, input, output } from '@angular/core';
+import { SubjDoc } from '../../../../pages/user/study-map/study-map';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { LucideAngularModule, ChevronDown, ChevronRight, MoreVertical, Plus } from 'lucide-angular';
