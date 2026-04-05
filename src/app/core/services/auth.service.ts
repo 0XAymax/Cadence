@@ -42,7 +42,15 @@ export class AuthService {
   refresh() {
     const refreshToken = this.getRefreshToken();
     return this.http
-      .post<AuthTokens>(`${this.url}/refreshToken`, { refreshToken })
+      .post<AuthTokens>(
+        `${this.url}/refreshToken`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${refreshToken}`,
+          },
+        },
+      )
       .pipe(tap((tokens) => this.setTokens(tokens)));
   }
 
