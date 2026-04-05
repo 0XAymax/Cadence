@@ -83,7 +83,28 @@ export class AuthService {
   // ─── Helpers ──────────────────────────────────────────────
 
   isLoggedIn(): boolean {
-    return !!this.getAccessToken();
+    const token = this.getAccessToken();
+    if (!token) return false;
+
+    if (this.isTokenExpired(token)) {
+      this.clearTokens();
+      return false;
+    }
+
+    return true;
+  }
+
+  private isTokenExpired(token: string): boolean {
+    try {
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      const payload = JSON.parse(atob(base64)); // or Buffer.from(...) for Node
+      const now = Math.floor(Date.now() / 1000);
+
+      if (!payload.exp) return true; // no expiry = treat as expired
+      return payload.exp < now + 30; // 30s clock skew buffer
+    } catch (e) {
+      return true;
+    }
   }
 
   hasRole(role: string): boolean {
