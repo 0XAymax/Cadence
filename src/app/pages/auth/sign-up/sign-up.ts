@@ -11,6 +11,7 @@ import { RegisterRequest } from '@app/core/models/auth.model';
 import { AuthService } from '@app/core/services/auth.service';
 import { toast } from 'ngx-sonner';
 import { firstValueFrom } from 'rxjs';
+import { extractErrorMessage } from '@app/core/utils/error.util';
 
 @Component({
   selector: 'app-sign-up',
@@ -68,7 +69,7 @@ export class SignUp {
             });
             this.router.navigate(['/user/dashboard']);
           } catch (err: any) {
-            const message = err?.error?.message ?? 'Something went wrong. Please try again.';
+            const message = extractErrorMessage(err);
             toast.error('Registration failed', {
               description: message,
             });
