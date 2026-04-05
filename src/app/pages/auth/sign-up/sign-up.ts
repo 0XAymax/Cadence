@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LucideAngularModule, Eye, EyeOff } from 'lucide-angular';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -10,6 +10,7 @@ import { form, required, email, FormRoot, FormField } from '@angular/forms/signa
 import { RegisterRequest } from '@app/core/models/auth.model';
 import { AuthService } from '@app/core/services/auth.service';
 import { toast } from 'ngx-sonner';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-sign-up',
@@ -39,6 +40,7 @@ export class SignUp {
   readonly Eye = Eye;
   readonly EyeOff = EyeOff;
   private authService = inject(AuthService);
+  private router = inject(Router);
 
   showPassword = false;
   SignUpForm = form(
@@ -55,26 +57,23 @@ export class SignUp {
     },
     {
       submission: {
-        action: () => {
+        action: async () => {
           const credentials = this.singupModel();
 
-          return new Promise((resolve, reject) => {
-            this.authService.register(credentials).subscribe({
-              next: () => {
-                toast.success('Account created!', {
-                  description: 'Welcome aboard 🎉',
-                });
-                resolve();
-              },
-              error: (err) => {
-                const message = err?.error?.message ?? 'Something went wrong. Please try again.';
-                toast.error('Registration failed', {
-                  description: message,
-                });
-                reject();
-              },
+          try {
+            await firstValueFrom(this.authService.register(credentials));
+
+            toast.success('Account created!', {
+              description: 'Welcome aboard!',
             });
-          });
+            this.router.navigate(['/user/dashboard']);
+          } catch (err: any) {
+            const message = err?.error?.message ?? 'Something went wrong. Please try again.';
+            toast.error('Registration failed', {
+              description: message,
+            });
+            throw err;
+          }
         },
       },
     },
