@@ -1,7 +1,8 @@
 <div
   hlmCard
-  class="flex flex-col h-full bg-card hover:border-border cursor-pointer transition-colors"
-  (click)="cardClick.emit(group().id)"
+  class="flex flex-col h-full bg-card hover:border-border transition-colors"
+  [class.cursor-pointer]="isClickable()"
+  (click)="handleCardClick()"
 >
   <div hlmCardHeader>
     <div class="flex items-center justify-between mb-2">

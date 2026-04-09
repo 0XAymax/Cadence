@@ -30,6 +30,7 @@
               [userRole]="item.userRole"
               [memberCount]="item.memberCount"
               (cardClick)="navigateToGroup($event)"
+              [isClickable]="true"
             >
             </app-group-card>
           } @empty {
@@ -53,6 +54,7 @@
               (cardClick)="navigateToGroup($event)"
               (joinClick)="joinGroup($event)"
               (requestJoinClick)="requestToJoin($event)"
+              [isClickable]="false"
             >
             </app-group-card>
           } @empty {

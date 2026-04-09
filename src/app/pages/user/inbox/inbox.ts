@@ -11,6 +11,7 @@ import { toast } from 'ngx-sonner';
   selector: 'app-inbox',
   imports: [CommonModule, InboxHeader, InboxFilters, NotificationsList, LucideAngularModule],
   templateUrl: './inbox.html',
+  providers: [NotificationService],
 })
 export class Inbox implements OnInit, OnDestroy {
   private notificationService = inject(NotificationService);

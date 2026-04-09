@@ -8,6 +8,7 @@ import { MainLayout } from '@app/layouts/main-layout/main-layout';
 import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { ServerErrorPage } from './pages/server-error/server-error';
+import { GroupService } from './core/services/group.service';
 
 export const routes: Routes = [
   {
@@ -76,11 +77,13 @@ export const routes: Routes = [
       {
         path: 'groups',
         loadComponent: () => import('./pages/user/groups/groups').then((m) => m.GroupsComponent),
+        providers: [GroupService],
       },
       {
         path: 'groups/:id',
         loadComponent: () =>
           import('./pages/user/group-detail/group-detail').then((m) => m.GroupDetailComponent),
+        providers: [GroupService],
       },
       {
         path: 'study-map',
