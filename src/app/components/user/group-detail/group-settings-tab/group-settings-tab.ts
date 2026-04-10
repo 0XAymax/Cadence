@@ -17,6 +17,7 @@ import { BrnDialogImports } from '@spartan-ng/brain/dialog';
 import { GroupService } from '@app/core/services/group.service';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
+import { extractErrorMessage } from '@app/core/utils/error.util';
 
 @Component({
   selector: 'app-group-settings-tab',
@@ -109,9 +110,8 @@ export class GroupSettingsTabComponent {
         toast.success('Group updated successfully.');
       },
       error: (err) => {
-        toast.error('Failed to update group.', {
-          description: 'An error occurred while updating the group. Please try again.',
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to update group.', { description: errorMessage });
         console.error('Failed to update group:', err);
       },
     });
@@ -128,9 +128,8 @@ export class GroupSettingsTabComponent {
         this.router.navigate(['/user/groups']);
       },
       error: (err) => {
-        toast.error('Failed to delete group.', {
-          description: 'An error occurred while deleting the group. Please try again.',
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to delete group.', { description: errorMessage });
         console.error('Failed to delete group:', err);
       },
     });
@@ -146,9 +145,8 @@ export class GroupSettingsTabComponent {
           this.router.navigate(['/user/groups']);
         },
         error: (err) => {
-          toast.error('Failed to transfer ownership.', {
-            description: 'An error occurred while transferring ownership. Please try again.',
-          });
+          const errorMessage = extractErrorMessage(err);
+          toast.error('Failed to transfer ownership.', { description: errorMessage });
           console.error('Failed to transfer ownership:', err);
         },
       });

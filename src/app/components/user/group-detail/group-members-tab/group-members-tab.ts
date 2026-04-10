@@ -11,6 +11,7 @@ import { Member } from '@app/core/models/group.model';
 import { GroupService } from '@app/core/services/group.service';
 import { toast } from 'ngx-sonner';
 import { AlertService } from '@app/components/shared/alert/alert.service';
+import { extractErrorMessage } from '@app/core/utils/error.util';
 
 @Component({
   selector: 'app-group-members-tab',
@@ -51,9 +52,8 @@ export class GroupMembersTabComponent {
         });
       },
       error: (err) => {
-        toast.error('Failed to accept join request.', {
-          description: 'An error occurred while accepting the join request. Please try again.',
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to accept join request.', { description: errorMessage });
         console.error('Failed to accept join request:', err);
       },
     });
@@ -67,9 +67,8 @@ export class GroupMembersTabComponent {
         });
       },
       error: (err) => {
-        toast.error('Failed to decline join request.', {
-          description: 'An error occurred while declining the join request. Please try again.',
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to decline join request.', { description: errorMessage });
         console.error('Failed to decline join request:', err);
       },
     });
@@ -84,9 +83,8 @@ export class GroupMembersTabComponent {
         });
       },
       error: (err) => {
-        toast.error('Failed to promote member.', {
-          description: 'An error occurred while promoting the member. Please try again.',
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to promote member.', { description: errorMessage });
         console.error('Failed to promote member:', err);
       },
     });
@@ -100,9 +98,8 @@ export class GroupMembersTabComponent {
         });
       },
       error: (err) => {
-        toast.error('Failed to demote member.', {
-          description: 'An error occurred while demoting the member. Please try again.',
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to demote member.', { description: errorMessage });
         console.error('Failed to demote member:', err);
       },
     });
@@ -116,9 +113,8 @@ export class GroupMembersTabComponent {
         });
       },
       error: (err) => {
-        toast.error('Failed to remove member.', {
-          description: 'An error occurred while removing the member. Please try again.',
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to remove member.', { description: errorMessage });
         console.error('Failed to remove member:', err);
       },
     });

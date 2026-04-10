@@ -8,6 +8,7 @@ import { BrnDialogImports } from '@spartan-ng/brain/dialog';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
+import { extractErrorMessage } from '@app/core/utils/error.util';
 
 @Component({
   selector: 'app-groups-page',
@@ -46,8 +47,9 @@ export class GroupsComponent {
         });
       },
       error: (err) => {
+        const errorMessage = extractErrorMessage(err);
         console.error('Failed to join group:', err);
-        toast.error('Failed to join the group.');
+        toast.error('Failed to join the group.', { description: errorMessage });
       },
     });
   }
@@ -61,8 +63,9 @@ export class GroupsComponent {
         });
       },
       error: (err) => {
+        const errorMessage = extractErrorMessage(err);
         console.error('Failed to send group request:', err);
-        toast.error('Failed to send the group request.');
+        toast.error('Failed to send the group request.', { description: errorMessage });
       },
     });
   }

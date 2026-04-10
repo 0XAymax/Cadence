@@ -13,6 +13,7 @@ import { GroupMembersTabComponent } from '@app/components/user/group-detail/grou
 import { GroupChatTabComponent } from '@app/components/user/group-detail/group-chat-tab/group-chat-tab';
 import { GroupSettingsTabComponent } from '@app/components/user/group-detail/group-settings-tab/group-settings-tab';
 import { toast } from 'ngx-sonner';
+import { extractErrorMessage } from '@app/core/utils/error.util';
 
 @Component({
   selector: 'app-group-detail-page',
@@ -70,8 +71,7 @@ export class GroupDetailComponent {
 
   get canLeaveGroup(): boolean {
     if (!this.group()) return false;
-    const adminCount = this.members().filter((m) => m.role === 'ADMIN').length;
-    return !(this.myRole() === 'ADMIN' && adminCount === 1);
+    return (this.myRole() !== 'OWNER');
   }
 
   leaveGroup() {
@@ -81,9 +81,8 @@ export class GroupDetailComponent {
         toast.success('You have left the group');
       },
       error: (err) => {
-        toast.error('Failed to leave group.', {
-          duration: 3000,
-        });
+        const errorMessage = extractErrorMessage(err);
+        toast.error('Failed to leave group.', { description: errorMessage });
         console.error('Error leaving group:', err);
       },
     });
