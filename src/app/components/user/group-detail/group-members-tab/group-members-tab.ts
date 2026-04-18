@@ -12,6 +12,7 @@ import { GroupService } from '@app/core/services/group.service';
 import { toast } from 'ngx-sonner';
 import { AlertService } from '@app/components/shared/alert/alert.service';
 import { extractErrorMessage } from '@app/core/utils/error.util';
+import { createMutation } from '@app/core/utils/mutation.helper';
 
 @Component({
   selector: 'app-group-members-tab',
@@ -47,21 +48,15 @@ export class GroupMembersTabComponent {
     return `${firstInitial}${lastInitial}`;
   };
 
-  acceptRequest(userId: string) {
-    this.groupService.acceptJoinRequest(this.groupId(), userId).subscribe({
-      next: () => {
-        toast.success('Join request accepted.', {
-          description:
-            'The user has been added to the group and can now participate in group activities.',
-        });
-      },
-      error: (err) => {
-        const errorMessage = extractErrorMessage(err);
-        toast.error('Failed to accept join request.', { description: errorMessage });
-        console.error('Failed to accept join request:', err);
-      },
-    });
-  }
+  readonly acceptRequest = createMutation({
+    mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
+      this.groupService.acceptJoinRequest(groupId, userId),
+    onSuccess: () =>
+      toast.success('Join request accepted.', {
+        description: 'The user has been added to the group.',
+      }),
+    onError: (err) => toast.error('Failed to accept join request.', { description: err }),
+  });
 
   declineRequest(userId: string) {
     this.groupService.declineJoinRequest(this.groupId(), userId).subscribe({
@@ -136,7 +131,8 @@ export class GroupMembersTabComponent {
 
   onRemoveClick(membershipId: string) {
     this.alertService.show({
-      description: 'Are you sure you want to remove this member from the group? This action cannot be undone.',
+      description:
+        'Are you sure you want to remove this member from the group? This action cannot be undone.',
       actionLabel: 'Remove',
       variant: 'destructive',
       action: () => this.removeMember(membershipId),
@@ -155,16 +151,18 @@ export class GroupMembersTabComponent {
 
   onAcceptClick(userId: string) {
     this.alertService.show({
-      description: 'Are you sure you want to accept this join request? The user will be added to the group and can participate in group activities.',
+      description:
+        'Are you sure you want to accept this join request? The user will be added to the group and can participate in group activities.',
       actionLabel: 'Accept',
       variant: 'default',
-      action: () => this.acceptRequest(userId),
+      action: () => this.acceptRequest.mutate({ groupId: this.groupId(), userId }),
     });
   }
 
   onDeclineClick(userId: string) {
     this.alertService.show({
-      description: "Are you sure you want to decline this join request? The user's request to join the group will be declined.",
+      description:
+        "Are you sure you want to decline this join request? The user's request to join the group will be declined.",
       actionLabel: 'Decline',
       variant: 'destructive',
       action: () => this.declineRequest(userId),
