@@ -55,69 +55,54 @@ export class GroupMembersTabComponent {
       toast.success('Join request accepted.', {
         description: 'The user has been added to the group.',
       }),
-    onError: (err) => toast.error('Failed to accept join request.', { description: err }),
+    onError: (err) =>
+      toast.error('Failed to accept join request.', { description: err }),
   });
 
-  declineRequest(userId: string) {
-    this.groupService.declineJoinRequest(this.groupId(), userId).subscribe({
-      next: () => {
-        toast.success('Join request declined.', {
-          description: "The user's request to join the group has been declined.",
-        });
-      },
-      error: (err) => {
-        const errorMessage = extractErrorMessage(err);
-        toast.error('Failed to decline join request.', { description: errorMessage });
-        console.error('Failed to decline join request:', err);
-      },
-    });
-  }
+  readonly declineRequest = createMutation({
+    mutationFn: ({ groupId, userId }: { groupId: string; userId: string }) =>
+      this.groupService.declineJoinRequest(groupId, userId),
+    onSuccess: () =>
+      toast.success('Join request declined.', {
+        description: "The user's request to join the group has been declined.",
+      }),
+    onError: (err) =>
+      toast.error('Failed to decline join request.', { description: err }),
+  });
 
-  promoteMember(membershipId: string) {
-    this.groupService.promoteMember(this.groupId(), membershipId).subscribe({
-      next: () => {
-        toast.success('Member promoted to admin.', {
-          description:
-            'The member now has admin privileges and can manage group settings and members.',
-        });
-      },
-      error: (err) => {
-        const errorMessage = extractErrorMessage(err);
-        toast.error('Failed to promote member.', { description: errorMessage });
-        console.error('Failed to promote member:', err);
-      },
-    });
-  }
+  readonly promoteMember = createMutation({
+    mutationFn: ({ groupId, membershipId }: { groupId: string; membershipId: string }) =>
+      this.groupService.promoteMember(groupId, membershipId),
+    onSuccess: () =>
+      toast.success('Member promoted to admin.', {
+        description:
+          'The member now has admin privileges and can manage group settings and members.',
+      }),
+    onError: (err) =>
+      toast.error('Failed to promote member.', { description: err }),
+  });
 
-  demoteMember(membershipId: string) {
-    this.groupService.demoteMember(this.groupId(), membershipId).subscribe({
-      next: () => {
-        toast.success('Member demoted to member.', {
-          description: 'The member is no longer an admin and has limited privileges.',
-        });
-      },
-      error: (err) => {
-        const errorMessage = extractErrorMessage(err);
-        toast.error('Failed to demote member.', { description: errorMessage });
-        console.error('Failed to demote member:', err);
-      },
-    });
-  }
+  readonly demoteMember = createMutation({
+    mutationFn: ({ groupId, membershipId }: { groupId: string; membershipId: string }) =>
+      this.groupService.demoteMember(groupId, membershipId),
+    onSuccess: () =>
+      toast.success('Member demoted to member.', {
+        description: 'The member is no longer an admin and has limited privileges.',
+      }),
+    onError: (err) =>
+      toast.error('Failed to demote member.', { description: err }),
+  });
 
-  removeMember(membershipId: string) {
-    this.groupService.removeMember(this.groupId(), membershipId).subscribe({
-      next: () => {
-        toast.success('Member removed from group.', {
-          description: 'The member has been removed from the group.',
-        });
-      },
-      error: (err) => {
-        const errorMessage = extractErrorMessage(err);
-        toast.error('Failed to remove member.', { description: errorMessage });
-        console.error('Failed to remove member:', err);
-      },
-    });
-  }
+  readonly removeMember = createMutation({
+    mutationFn: ({ groupId, membershipId }: { groupId: string; membershipId: string }) =>
+      this.groupService.removeMember(groupId, membershipId),
+    onSuccess: () =>
+      toast.success('Member removed from group.', {
+        description: 'The member has been removed from the group.',
+      }),
+    onError: (err) =>
+      toast.error('Failed to remove member.', { description: err }),
+  });
 
   onPromoteClick(membershipId: string) {
     this.alertService.show({
@@ -125,7 +110,7 @@ export class GroupMembersTabComponent {
         'Are you sure you want to promote this member to admin? They will have additional privileges, including managing group settings and members.',
       actionLabel: 'Promote',
       variant: 'destructive',
-      action: () => this.promoteMember(membershipId),
+      action: () => this.promoteMember.mutate({ groupId: this.groupId(), membershipId }),
     });
   }
 
@@ -135,7 +120,7 @@ export class GroupMembersTabComponent {
         'Are you sure you want to remove this member from the group? This action cannot be undone.',
       actionLabel: 'Remove',
       variant: 'destructive',
-      action: () => this.removeMember(membershipId),
+      action: () => this.removeMember.mutate({ groupId: this.groupId(), membershipId }),
     });
   }
 
@@ -145,7 +130,7 @@ export class GroupMembersTabComponent {
         'Are you sure you want to demote this admin to a regular member? They will lose their admin privileges and will no longer be able to manage group settings and members.',
       actionLabel: 'Demote',
       variant: 'destructive',
-      action: () => this.demoteMember(membershipId),
+      action: () => this.demoteMember.mutate({ groupId: this.groupId(), membershipId }),
     });
   }
 
@@ -165,7 +150,7 @@ export class GroupMembersTabComponent {
         "Are you sure you want to decline this join request? The user's request to join the group will be declined.",
       actionLabel: 'Decline',
       variant: 'destructive',
-      action: () => this.declineRequest(userId),
+      action: () => this.declineRequest.mutate({ groupId: this.groupId(), userId }),
     });
   }
 }
