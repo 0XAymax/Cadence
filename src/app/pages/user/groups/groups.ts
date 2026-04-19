@@ -1,7 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupService } from '@app/core/services/group.service';
-import { GroupCardComponent } from '@app/components/user/groups/group-card/group-card';
 import { CreateGroupDialogComponent } from '@app/components/user/groups/create-group-dialog/create-group-dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { BrnDialogImports } from '@spartan-ng/brain/dialog';
@@ -9,18 +8,19 @@ import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { Router } from '@angular/router';
 import { toast } from 'ngx-sonner';
 import { extractErrorMessage } from '@app/core/utils/error.util';
+import { GroupDataTable } from "@app/components/user/groups/group-table/group-table";
 
 @Component({
   selector: 'app-groups-page',
   standalone: true,
   imports: [
     CommonModule,
-    GroupCardComponent,
     CreateGroupDialogComponent,
     HlmButtonImports,
     BrnDialogImports,
     HlmTabsImports,
-  ],
+    GroupDataTable
+],
   templateUrl: './groups.html',
 })
 export class GroupsComponent {

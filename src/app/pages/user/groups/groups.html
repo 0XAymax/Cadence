@@ -23,48 +23,20 @@
 
       <!-- My Groups Section -->
       <div hlmTabsContent="my-groups">
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-2">
-          @for (item of myGroups(); track item.id) {
-            <app-group-card
-              [group]="item"
-              [userRole]="item.userRole"
-              [memberCount]="item.membersCount"
-              (cardClick)="navigateToGroup($event)"
-              [isClickable]="true"
-            >
-            </app-group-card>
-          } @empty {
-            <div class="col-span-full py-12 text-center border rounded-lg border-dashed">
-              <p class="text-muted-foreground">You are not a member of any groups yet.</p>
-              <button hlmBtn variant="link" (click)="activeTab.set('discover')">
-                Discover groups to join
-              </button>
-            </div>
-          }
-        </div>
+        <app-group-data-table
+          [groups]="myGroups()"
+          [isClickable]="true"
+        />
       </div>
 
       <!-- Discover Section -->
       <div hlmTabsContent="discover">
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mt-2">
-          @for (item of discoverGroups(); track item.id) {
-            <app-group-card
-              [group]="item"
-              [memberCount]="item.membersCount"
-              (cardClick)="navigateToGroup($event)"
-              (joinClick)="joinGroup($event)"
-              (requestJoinClick)="requestToJoin($event)"
-              [isClickable]="false"
-            >
-            </app-group-card>
-          } @empty {
-            <div class="col-span-full py-12 text-center border rounded-lg border-dashed">
-              <p class="text-muted-foreground">
-                No available groups to discover. Why not create one?
-              </p>
-            </div>
-          }
-        </div>
+        <app-group-data-table
+          [groups]="discoverGroups()"
+          (joinClick)="joinGroup($event)"
+          (requestJoinClick)="requestToJoin($event)"
+          [isClickable]="false"
+        />
       </div>
     </hlm-tabs>
   }
