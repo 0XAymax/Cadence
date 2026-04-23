@@ -1,5 +1,4 @@
-import { Component, input, output } from '@angular/core';
-import { SubjDoc } from '../../../../pages/user/study-map/study-map';
+import { Component, inject, input, output, signal } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { LucideAngularModule, ChevronDown, ChevronRight, MoreVertical, Plus } from 'lucide-angular';
@@ -9,6 +8,9 @@ import { CommonModule } from '@angular/common';
 import { GoalItemComponent } from '../goal-item/goal-item';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { GoalFormComponent } from '../goal-form/goal-form';
+import { Goal } from '@app/core/models/goal.model';
+import { SubjectModel } from '@app/core/models/subject.model';
+import { GoalService } from '@app/core/services/goal.service';
 
 @Component({
   selector: 'app-subject-card',
@@ -23,11 +25,13 @@ import { GoalFormComponent } from '../goal-form/goal-form';
     GoalItemComponent,
     HlmSheetImports,
     GoalFormComponent,
+    LucideAngularModule,
   ],
   templateUrl: './subject-card.html',
 })
 export class SubjectCardComponent {
-  subject = input.required<SubjDoc>();
+  private goalService = inject(GoalService);
+  subject = input.required<SubjectModel>();
   isExpanded = input<boolean>(false);
   toggleExpand = output<void>();
 
@@ -35,8 +39,14 @@ export class SubjectCardComponent {
   protected ChevronRight = ChevronRight;
   protected MoreVertical = MoreVertical;
   protected Plus = Plus;
+  readonly goals = this.goalService.allGoals.data;
+  readonly isLoadingGoals = this.goalService.allGoals.isLoading;
 
   expandedGoalId: string | null = null;
+
+  ngOnInit() {
+    this.goalService.loadAllGoals(this.subject().id).subscribe();
+  }
 
   toggleGoal(goalId: string) {
     if (this.expandedGoalId === goalId) {

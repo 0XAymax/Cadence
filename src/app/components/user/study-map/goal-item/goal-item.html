@@ -59,9 +59,9 @@
       </div>
 
       <!-- Tasks List -->
-      @if (goal().tasks.length > 0) {
+      @if (tasks().length > 0) {
         <div class="flex flex-col gap-1">
-          @for (task of goal().tasks; track task.id) {
+          @for (task of tasks(); track task.id) {
             <app-task-item [task]="task" />
           }
         </div>

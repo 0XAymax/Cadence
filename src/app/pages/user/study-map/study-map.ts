@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { LucideAngularModule, Plus } from 'lucide-angular';
@@ -6,6 +6,7 @@ import { SubjectCardComponent } from '@app/components/user/study-map/subject-car
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { SubjectFormComponent } from '@app/components/user/study-map/subject-form/subject-form';
 import { HlmCardImports } from '@spartan-ng/helm/card';
+import { SubjectService } from '@app/core/services/subject.service';
 
 export interface SubjTask {
   id: string;
@@ -49,59 +50,12 @@ export interface SubjDoc {
 })
 export class StudyMapComponent {
   protected Plus = Plus;
-
-  // Mock data setup
-  subjects: SubjDoc[] = [
-    {
-      id: 'sub-1',
-      name: 'Computer Science 101',
-      description: 'Introductory course to computer science principles and programming.',
-      priority: 'HIGH',
-      goals: [
-        {
-          id: 'goal-1',
-          title: 'Master Data Structures',
-          progress: 30,
-          targetHoursPerWeek: 5,
-          deadline: '2026-06-01',
-          status: 'IN_PROGRESS',
-          tasks: [
-            {
-              id: 'task-1',
-              title: 'Read Arrays Chapter',
-              description: 'Read chapter 4 on arrays',
-              durationMinutes: 60,
-              completed: true,
-            },
-            {
-              id: 'task-2',
-              title: 'Do Linked List exercises',
-              description: 'Complete exercises 1 to 10',
-              durationMinutes: 120,
-              completed: false,
-            },
-          ],
-        },
-        {
-          id: 'goal-2',
-          title: 'Understand Algorithms',
-          progress: 0,
-          targetHoursPerWeek: 3,
-          deadline: '2026-07-01',
-          status: 'NOT_STARTED',
-          tasks: [],
-        },
-      ],
-    },
-    {
-      id: 'sub-2',
-      name: 'Calculus II',
-      description: 'Advanced calculus concepts including integration and series.',
-      priority: 'MEDIUM',
-      goals: [],
-    },
-  ];
-
+  private subjectService = inject(SubjectService);
+  readonly subjects = this.subjectService.allSubjects.data;
+  readonly isSubjectsLoading = this.subjectService.allSubjects.isLoading;
+  ngOnInit() {
+    this.subjectService.loadAllSubjects().subscribe();
+  }
   expandedSubjectId: string | null = null;
 
   toggleSubject(subjectId: string) {

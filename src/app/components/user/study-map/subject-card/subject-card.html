@@ -36,34 +36,42 @@
   </div>
 
   <!-- Expanded Content (Goals) -->
-  @if (isExpanded()) {
-    <div class="px-4 pb-5 sm:px-5 sm:pb-5 pt-0 border-t border-border/50 bg-muted/20">
-      <div class="flex items-center justify-between mb-4 mt-4">
-        <h4 class="text-sm font-medium text-foreground">Goals</h4>
-        <!-- Add Goal Sheet -->
-        <app-goal-form [SubjectName]="subject().name" [subjectId]="subject().id" />
-      </div>
 
-      <!-- Goals List -->
-      @if (subject().goals.length > 0) {
-        <div class="flex flex-col gap-3">
-          @for (goal of subject().goals; track goal.id) {
-            <app-goal-item
-              [goal]="goal"
-              [isExpanded]="expandedGoalId === goal.id"
-              (toggleExpand)="toggleGoal(goal.id)"
-            />
-          }
+  @if (isExpanded()) {
+    @if (isLoadingGoals()) {
+      <div class="flex justify-center p-6 text-muted-foreground">
+        <lucide-angular name="loader-2" class="h-6 w-6 animate-spin"></lucide-angular>
+        <span class="ml-2 text-sm">Loading goals...</span>
+      </div>
+    } @else {
+      <div class="px-4 pb-5 sm:px-5 sm:pb-5 pt-0 border-t border-border/50 bg-muted/20">
+        <div class="flex items-center justify-between mb-4 mt-4">
+          <h4 class="text-sm font-medium text-foreground">Goals</h4>
+          <!-- Add Goal Sheet -->
+          <app-goal-form [SubjectName]="subject().name" [subjectId]="subject().id" />
         </div>
-      } @else {
-        <!-- Empty Goals State -->
-        <div
-          class="flex flex-col items-center justify-center p-6 border border-dashed border-border rounded-lg bg-card text-center"
-        >
-          <p class="text-sm text-muted-foreground mb-3">No goals yet for this subject.</p>
-        </div>
-      }
-    </div>
+
+        <!-- Goals List -->
+        @if (goals().length > 0) {
+          <div class="flex flex-col gap-3">
+            @for (goal of goals(); track goal.id) {
+              <app-goal-item
+                [goal]="goal"
+                [isExpanded]="expandedGoalId === goal.id"
+                (toggleExpand)="toggleGoal(goal.id)"
+              />
+            }
+          </div>
+        } @else {
+          <!-- Empty Goals State -->
+          <div
+            class="flex flex-col items-center justify-center p-6 border border-dashed border-border rounded-lg bg-card text-center"
+          >
+            <p class="text-sm text-muted-foreground mb-3">No goals yet for this subject.</p>
+          </div>
+        }
+      </div>
+    }
   }
 </hlm-card>
 

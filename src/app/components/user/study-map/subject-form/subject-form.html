@@ -11,11 +11,11 @@
           hlmInput
           id="subject-name"
           placeholder="e.g. Mathematics"
-          [formField]="subjectForm.subjectName"
+          [formField]="subjectForm.name"
         />
-        @if (subjectForm.subjectName().touched() && subjectForm.subjectName().invalid()) {
+        @if (subjectForm.name().touched() && subjectForm.name().invalid()) {
           <p class="text-xs text-destructive">
-            @for (error of subjectForm.subjectName().errors(); track error) {
+            @for (error of subjectForm.name().errors(); track error) {
               <p>{{ error.message }}</p>
             }
           </p>
@@ -28,11 +28,11 @@
           hlmInput
           id="subject-description"
           placeholder="Optional short note"
-          [formField]="subjectForm.subjectDescription"
+          [formField]="subjectForm.description"
         />
-         @if (subjectForm.subjectDescription().touched() && subjectForm.subjectDescription().invalid()) {
+         @if (subjectForm.description().touched() && subjectForm.description().invalid()) {
           <p class="text-xs text-destructive">
-            @for (error of subjectForm.subjectDescription().errors(); track error) {
+            @for (error of subjectForm.description().errors(); track error) {
               <p>{{ error.message }}</p>
             }
           </p>
@@ -44,15 +44,15 @@
         <select
           id="subject-priority"
           class="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm text-foreground"
-          [formField]="subjectForm.subjectPriority"
+          [formField]="subjectForm.priority"
         >
           <option value="HIGH">High</option>
           <option value="MEDIUM">Medium</option>
           <option value="LOW">Low</option>
         </select>
-         @if (subjectForm.subjectPriority().touched() && subjectForm.subjectPriority().invalid()) {
+         @if (subjectForm.priority().touched() && subjectForm.priority().invalid()) {
           <p class="text-xs text-destructive">
-            @for (error of subjectForm.subjectPriority().errors(); track error) {
+            @for (error of subjectForm.priority().errors(); track error) {
               <p>{{ error.message }}</p>
             }
           </p>

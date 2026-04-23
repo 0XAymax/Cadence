@@ -1,5 +1,4 @@
-import { Component, Input, Output, EventEmitter, input, output } from '@angular/core';
-import { SubjGoal } from '../../../../pages/user/study-map/study-map';
+import { Component, Input, Output, EventEmitter, input, output, signal } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import {
   LucideAngularModule,
@@ -17,6 +16,7 @@ import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { TaskFormComponent } from '../task-form/task-form';
 import { HlmProgressImports } from '@spartan-ng/helm/progress';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
+import { Goal, GoalTask } from '@app/core/models/goal.model';
 
 @Component({
   selector: 'app-goal-item',
@@ -35,9 +35,10 @@ import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
   templateUrl: './goal-item.html',
 })
 export class GoalItemComponent {
-  goal = input.required<SubjGoal>();
+  goal = input.required<Goal>();
   isExpanded = input<boolean>(false);
   toggleExpand = output<void>();
+  tasks = signal<GoalTask[]>([]);
 
   protected ChevronDown = ChevronDown;
   protected ChevronRight = ChevronRight;

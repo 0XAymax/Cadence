@@ -32,10 +32,10 @@
 
       <div class="grid gap-2.5">
         <label hlmLabel for="goal-hours">Target hours per week</label>
-        <input hlmInput id="goal-hours" type="number" placeholder="e.g. 5" [formField]="goalForm.hours" />
-        @if (goalForm.hours().touched() && goalForm.hours().invalid()) {
+        <input hlmInput id="goal-hours" type="number" placeholder="e.g. 5" [formField]="goalForm.targetHoursPerWeek" />
+        @if (goalForm.targetHoursPerWeek().touched() && goalForm.targetHoursPerWeek().invalid()) {
           <p class="text-xs text-destructive">
-            @for (error of goalForm.hours().errors(); track error) {
+            @for (error of goalForm.targetHoursPerWeek().errors(); track error) {
               <p>{{ error.message }}</p>
             }
           </p>
@@ -60,7 +60,7 @@
         <input
           hlmInput
           id="goal-subject"
-          value="Pre-selected Subject Name"
+          [value]="SubjectName()"
           disabled
           class="bg-muted text-muted-foreground"
         />

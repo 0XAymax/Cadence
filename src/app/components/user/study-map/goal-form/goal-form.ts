@@ -1,11 +1,14 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { LucideAngularModule, Plus } from 'lucide-angular';
-import { GoalWithoutSubject } from '@app/core/models/goal.model';
+import { CreateGoalRequest, GoalWithoutSubject } from '@app/core/models/goal.model';
 import { form, required, FormRoot, FormField } from '@angular/forms/signals';
+import { createMutation } from '@app/core/utils/mutation.helper';
+import { GoalService } from '@app/core/services/goal.service';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-goal-form',
@@ -17,32 +20,52 @@ import { form, required, FormRoot, FormField } from '@angular/forms/signals';
     HlmSheetImports,
     LucideAngularModule,
     FormRoot,
-    FormField
-],
+    FormField,
+  ],
   templateUrl: './goal-form.html',
 })
 export class GoalFormComponent {
   protected Plus = Plus;
   readonly SubjectName = input.required<string>();
   readonly subjectId = input.required<string>();
+  private goalService = inject(GoalService);
 
-  goalModel = signal<GoalWithoutSubject>({
+  goalModel = signal<CreateGoalRequest>({
     title: '',
-    hours: 0,
+    targetHoursPerWeek: 0,
     deadline: new Date(),
+    progress: 0,
   });
 
-  goalForm = form(this.goalModel, (schema) =>{
-    required(schema.title);
-    required(schema.hours);
-    required(schema.deadline);
-  }, {
-    submission: {
-      action: async() => {
-        const credentials = {...this.goalModel(), subjectId : this.subjectId()};
-        console.log("Submitted goal",credentials);
-      }
-    }
-  })
+  readonly createGoalMutation = createMutation({
+    mutationFn: (payload: CreateGoalRequest) =>
+      this.goalService.createSubjectGoal(payload, this.subjectId()),
+    onSuccess: () => {
+      toast.success('Subject created successfully', {
+        description: 'The new subject has been added to your study map.',
+      });
+    },
+    onError: () => {
+      toast.success('Subject created successfully', {
+        description: 'The new subject has been added to your study map.',
+      });
+    },
+  });
 
+  goalForm = form(
+    this.goalModel,
+    (schema) => {
+      required(schema.title);
+      required(schema.targetHoursPerWeek);
+      required(schema.deadline);
+    },
+    {
+      submission: {
+        action: async () => {
+          const credentials = this.goalModel();
+          this.createGoalMutation.mutate(credentials);
+        },
+      },
+    },
+  );
 }
