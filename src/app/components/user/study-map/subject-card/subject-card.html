@@ -48,7 +48,20 @@
         <div class="flex items-center justify-between mb-4 mt-4">
           <h4 class="text-sm font-medium text-foreground">Goals</h4>
           <!-- Add Goal Sheet -->
-          <app-goal-form [SubjectName]="subject().name" [subjectId]="subject().id" />
+          <hlm-sheet>
+            <button
+              hlmBtn
+              size="sm"
+              variant="outline"
+              class="h-8 text-xs gap-1.5"
+              hlmSheetTrigger
+              side="right"
+            >
+              <lucide-angular [img]="Plus" class="h-3.5 w-3.5" />
+              Add goal
+            </button>
+            <app-goal-form [SubjectName]="subject().name" [subjectId]="subject().id" />
+          </hlm-sheet>
         </div>
 
         <!-- Goals List -->

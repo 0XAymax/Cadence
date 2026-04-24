@@ -108,7 +108,12 @@
 
 <ng-template #goalMenu>
   <hlm-dropdown-menu>
-    <button hlmDropdownMenuItem>Edit goal</button>
-    <button hlmDropdownMenuItem class="text-destructive">Delete goal</button>
+    <hlm-sheet side="right">
+      <button hlmSheetTrigger hlmDropdownMenuItem class="w-full text-left">Edit goal</button>
+      <app-goal-form [goal]="goal()"></app-goal-form>
+    </hlm-sheet>
+    <button hlmDropdownMenuItem class="text-destructive w-full" (click)="onDeleteGoal(goal().id)">
+      Delete goal
+    </button>
   </hlm-dropdown-menu>
 </ng-template>

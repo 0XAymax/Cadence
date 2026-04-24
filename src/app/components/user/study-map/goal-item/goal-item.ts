@@ -1,4 +1,13 @@
-import { Component, Input, Output, EventEmitter, input, output, signal, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  input,
+  output,
+  signal,
+  inject,
+} from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import {
   LucideAngularModule,
@@ -18,6 +27,10 @@ import { HlmProgressImports } from '@spartan-ng/helm/progress';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { Goal, Task } from '@app/core/models/goal.model';
 import { GoalService } from '@app/core/services/goal.service';
+import { AlertService } from '@app/components/shared/alert/alert.service';
+import { createMutation } from '@app/core/utils/mutation.helper';
+import { toast } from 'ngx-sonner';
+import { GoalFormComponent } from '../goal-form/goal-form';
 
 @Component({
   selector: 'app-goal-item',
@@ -32,11 +45,13 @@ import { GoalService } from '@app/core/services/goal.service';
     TaskFormComponent,
     HlmDropdownMenuImports,
     HlmProgressImports,
+    GoalFormComponent,
   ],
   templateUrl: './goal-item.html',
 })
 export class GoalItemComponent {
   goalService = inject(GoalService);
+  private alertService = inject(AlertService);
   goal = input.required<Goal>();
   isExpanded = input<boolean>(false);
   toggleExpand = output<void>();
@@ -53,4 +68,30 @@ export class GoalItemComponent {
   protected Plus = Plus;
   protected Calendar = Calendar;
   protected Clock = Clock;
+
+  readonly deleteGoalMutation = createMutation({
+    mutationFn: (goalId: string) => this.goalService.deleteGoal(goalId),
+    onSuccess: () => {
+      toast.success('Goal deleted', {
+        description: 'The goal has been removed from your study map.',
+      });
+    },
+    onError: (error) => {
+      toast.error('Failed to delete goal', {
+        description: error,
+      });
+      console.error('Failed to delete goal :', error);
+    },
+  });
+
+  onDeleteGoal(goalId: string) {
+    this.alertService.show({
+      description: 'Are you sure you want to delete this goal?',
+      variant: 'destructive',
+      actionLabel: 'Delete',
+      action: () => {
+        this.deleteGoalMutation.mutate(goalId);
+      },
+    });
+  }
 }

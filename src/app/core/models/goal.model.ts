@@ -29,6 +29,8 @@ export interface CreateGoalRequest {
   deadline: Date;
 }
 
+export type UpdateGoalRequest = Partial<CreateGoalRequest>;
+
 export interface CreateGoalTask {
   title: string;
   description: string;
