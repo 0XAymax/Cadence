@@ -42,6 +42,7 @@ export class SubjectCardComponent {
   subject = input.required<SubjectModel>();
   isExpanded = input<boolean>(false);
   toggleExpand = output<void>();
+  isSheetOpen = signal(false);
 
   protected ChevronDown = ChevronDown;
   protected ChevronRight = ChevronRight;

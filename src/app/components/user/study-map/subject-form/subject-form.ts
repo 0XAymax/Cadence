@@ -1,4 +1,13 @@
-import { Component, effect, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
@@ -29,28 +38,27 @@ import { toast } from 'ngx-sonner';
 })
 export class SubjectFormComponent {
   subject = input<SubjectModel>();
-
   subjectModel = signal<CreateSubjectRequest>({
     name: '',
     description: '',
     priority: SubjectPriority.LOW,
   });
 
+  @ViewChild('closeBtn') closeBtn!: ElementRef<HTMLButtonElement>;
+
   private readonly subjectService = inject(SubjectService);
 
   constructor() {
-    effect(
-      () => {
-        const existing = this.subject();
-        if (existing) {
-          this.subjectModel.set({
-            name: existing.name,
-            description: existing.description,
-            priority: existing.priority,
-          });
-        }
-      },
-    );
+    effect(() => {
+      const existing = this.subject();
+      if (existing) {
+        this.subjectModel.set({
+          name: existing.name,
+          description: existing.description,
+          priority: existing.priority,
+        });
+      }
+    });
   }
 
   readonly createSubjectMutation = createMutation({
@@ -59,6 +67,7 @@ export class SubjectFormComponent {
       toast.success('Subject created successfully', {
         description: 'The new subject has been added to your study map.',
       });
+      this.closeBtn.nativeElement.click();
     },
     onError: (err) => {
       toast.error('Failed to create subject', {
@@ -75,6 +84,7 @@ export class SubjectFormComponent {
       toast.success('Subject updated successfully', {
         description: 'Your subject details have been updated.',
       });
+      this.closeBtn.nativeElement.click();
     },
     onError: (err) => {
       toast.error('Failed to update subject', {
