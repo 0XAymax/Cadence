@@ -16,6 +16,8 @@ export interface CreateSubjectRequest {
   priority: SubjectPriority;
 }
 
+export type UpdateSubjectRequest = Partial<CreateSubjectRequest>;
+
 export interface SubjectModel {
   id: string;
   name: string;

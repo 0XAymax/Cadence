@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environments';
 import { HttpClient } from '@angular/common/http';
-import { CreateSubjectRequest, SubjectModel } from '../models/subject.model';
+import { CreateSubjectRequest, SubjectModel, UpdateSubjectRequest } from '../models/subject.model';
 import { createQuery } from '../utils/query.helper';
 import { tap } from 'rxjs';
 
@@ -28,6 +28,16 @@ export class SubjectService {
       tap(() => {
         this.allSubjects.mutate((subjects) =>
           subjects.filter((subject) => subject.id !== subjectId),
+        );
+      }),
+    );
+  }
+
+  public updateSubject(subjectId: string, payload: UpdateSubjectRequest) {
+    return this.http.patch<SubjectModel>(`${this.url}/update/${subjectId}`, payload).pipe(
+      tap((updatedSubject) => {
+        this.allSubjects.mutate((subjects) =>
+          subjects.map((subject) => (subject.id === subjectId ? updatedSubject : subject)),
         );
       }),
     );

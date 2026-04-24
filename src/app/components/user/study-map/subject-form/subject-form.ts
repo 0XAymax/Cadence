@@ -1,8 +1,13 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, input, signal } from '@angular/core';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
-import { CreateSubjectRequest, SubjectData, SubjectPriority } from '@app/core/models/subject.model';
+import {
+  CreateSubjectRequest,
+  SubjectModel,
+  SubjectPriority,
+  UpdateSubjectRequest,
+} from '@app/core/models/subject.model';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { SubjectService } from '@app/core/services/subject.service';
@@ -23,12 +28,30 @@ import { toast } from 'ngx-sonner';
   templateUrl: './subject-form.html',
 })
 export class SubjectFormComponent {
+  subject = input<SubjectModel>();
+
   subjectModel = signal<CreateSubjectRequest>({
     name: '',
     description: '',
     priority: SubjectPriority.LOW,
   });
+
   private readonly subjectService = inject(SubjectService);
+
+  constructor() {
+    effect(
+      () => {
+        const existing = this.subject();
+        if (existing) {
+          this.subjectModel.set({
+            name: existing.name,
+            description: existing.description,
+            priority: existing.priority,
+          });
+        }
+      },
+    );
+  }
 
   readonly createSubjectMutation = createMutation({
     mutationFn: (payload: CreateSubjectRequest) => this.subjectService.createSubject(payload),
@@ -45,6 +68,22 @@ export class SubjectFormComponent {
     },
   });
 
+  readonly updateSubjectMutation = createMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: UpdateSubjectRequest }) =>
+      this.subjectService.updateSubject(id, payload),
+    onSuccess: () => {
+      toast.success('Subject updated successfully', {
+        description: 'Your subject details have been updated.',
+      });
+    },
+    onError: (err) => {
+      toast.error('Failed to update subject', {
+        description: 'An error occurred while updating the subject. Please try again.',
+      });
+      console.error('Failed to update subject', err);
+    },
+  });
+
   subjectForm = form(
     this.subjectModel,
     (schema) => {
@@ -54,8 +93,14 @@ export class SubjectFormComponent {
     {
       submission: {
         action: async () => {
-          const credentials = this.subjectModel;
-          this.createSubjectMutation.mutate(credentials());
+          const payload = this.subjectModel();
+          const existing = this.subject();
+
+          if (existing) {
+            this.updateSubjectMutation.mutate({ id: existing.id, payload });
+          } else {
+            this.createSubjectMutation.mutate(payload);
+          }
         },
       },
     },

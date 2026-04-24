@@ -1,7 +1,13 @@
 <hlm-sheet-content *hlmSheetPortal="let ctx" class="flex flex-col gap-6 p-6">
   <div hlmSheetHeader side="right">
-    <h2 hlmSheetTitle class="text-lg">Create subject</h2>
-    <p hlmSheetDescription class="text-sm">Add a new subject to organize your goals and tasks.</p>
+    <h2 hlmSheetTitle class="text-lg">{{ subject() ? 'Update subject' : 'Create subject' }}</h2>
+    <p hlmSheetDescription class="text-sm">
+      {{
+        subject()
+          ? 'Update the details of your existing subject.'
+          : 'Add a new subject to organize your goals and tasks.'
+      }}
+    </p>
   </div>
   <form [formRoot]="subjectForm" novalidate>
     <div class="grid gap-6">
@@ -30,7 +36,7 @@
           placeholder="Optional short note"
           [formField]="subjectForm.description"
         />
-         @if (subjectForm.description().touched() && subjectForm.description().invalid()) {
+        @if (subjectForm.description().touched() && subjectForm.description().invalid()) {
           <p class="text-xs text-destructive">
             @for (error of subjectForm.description().errors(); track error) {
               <p>{{ error.message }}</p>
@@ -50,7 +56,7 @@
           <option value="MEDIUM">Medium</option>
           <option value="LOW">Low</option>
         </select>
-         @if (subjectForm.priority().touched() && subjectForm.priority().invalid()) {
+        @if (subjectForm.priority().touched() && subjectForm.priority().invalid()) {
           <p class="text-xs text-destructive">
             @for (error of subjectForm.priority().errors(); track error) {
               <p>{{ error.message }}</p>
@@ -67,7 +73,7 @@
         type="submit"
         [disabled]="subjectForm().submitting() || subjectForm().invalid()"
       >
-        Create subject
+        {{ subject() ? 'Update subject' : 'Create subject' }}
       </button>
     </div>
   </form>

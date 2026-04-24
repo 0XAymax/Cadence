@@ -77,7 +77,12 @@
 
 <ng-template #subjectMenu>
   <hlm-dropdown-menu>
-    <button hlmDropdownMenuItem>Edit subject</button>
-    <button hlmDropdownMenuItem class="text-destructive" (click)="onDeleteSubject(subject().id)">Delete subject</button>
+    <hlm-sheet>
+      <button hlmSheetTrigger hlmDropdownMenuItem class="w-full text-left">Edit subject</button>
+      <app-subject-form [subject]="subject()"></app-subject-form>
+    </hlm-sheet>
+    <button hlmDropdownMenuItem class="text-destructive" (click)="onDeleteSubject(subject().id)">
+      Delete subject
+    </button>
   </hlm-dropdown-menu>
 </ng-template>
