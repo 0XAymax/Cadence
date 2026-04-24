@@ -19,7 +19,6 @@
       </div>
 
       <div class="flex items-center gap-3 shrink-0">
-        
         <button
           [hlmDropdownMenuTrigger]="taskMenu"
           hlmBtn
@@ -35,8 +34,15 @@
 
   <ng-template #taskMenu>
     <hlm-dropdown-menu>
-      <button hlmDropdownMenuItem>Edit task</button>
+      <button hlmDropdownMenuItem (click)="updateTaskDialogState.set('open')">Edit task</button>
       <button hlmDropdownMenuItem class="text-destructive">Delete task</button>
     </hlm-dropdown-menu>
   </ng-template>
+
+  <app-task-form-dialog
+    [state]="updateTaskDialogState()"
+    (dialogStateChange)="updateTaskDialogState.set($event)"
+    [task]="task()"
+  >
+  </app-task-form-dialog>
 </div>

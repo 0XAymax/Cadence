@@ -1,8 +1,5 @@
 import {
   Component,
-  Input,
-  Output,
-  EventEmitter,
   input,
   output,
   signal,
@@ -21,8 +18,6 @@ import {
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { CommonModule } from '@angular/common';
 import { TaskItemComponent } from '../task-item/task-item';
-import { HlmSheetImports } from '@spartan-ng/helm/sheet';
-import { TaskFormComponent } from '../task-form/task-form';
 import { HlmProgressImports } from '@spartan-ng/helm/progress';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { Goal } from '@app/core/models/goal.model';
@@ -31,6 +26,7 @@ import { AlertService } from '@app/components/shared/alert/alert.service';
 import { createMutation } from '@app/core/utils/mutation.helper';
 import { toast } from 'ngx-sonner';
 import { GoalFormDialogComponent } from "../goal-form-dialog/goal-form-dialog";
+import { TaskFormDialogComponent } from "../task-form-dialog/task-form-dialog";
 
 @Component({
   selector: 'app-goal-item',
@@ -41,12 +37,11 @@ import { GoalFormDialogComponent } from "../goal-form-dialog/goal-form-dialog";
     LucideAngularModule,
     HlmBadgeImports,
     TaskItemComponent,
-    HlmSheetImports,
-    TaskFormComponent,
     HlmDropdownMenuImports,
     HlmProgressImports,
     GoalFormDialogComponent,
-  ],
+    TaskFormDialogComponent
+],
   templateUrl: './goal-item.html',
 })
 export class GoalItemComponent {
@@ -59,6 +54,7 @@ export class GoalItemComponent {
   isLoadingTasks = this.goalService.allTasks.isLoading;
   updateGoalDialogState = signal<'closed' | 'open'>('closed');
   SubjectName = input<string>('');
+  createTaskDialogState = signal<'closed' | 'open'>('closed');
 
   ngOnInit() {
     this.goalService.loadAllTasks(this.goal().id).subscribe();
