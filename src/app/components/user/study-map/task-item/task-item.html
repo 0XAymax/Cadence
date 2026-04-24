@@ -1,6 +1,6 @@
 <div class="flex items-start gap-3 p-3 rounded-md hover:bg-muted/50 transition-colors group">
   <div class="pt-1">
-    <hlm-checkbox [checked]="task().completed" (changed)="toggleCompletion()"></hlm-checkbox>
+    <hlm-checkbox [checked]="completed()" (changed)="toggleCompletion()"></hlm-checkbox>
   </div>
 
   <div class="flex-1 min-w-0">
@@ -8,8 +8,8 @@
       <div>
         <p
           class="text-sm font-medium text-foreground"
-          [class.line-through]="task().completed"
-          [class.text-muted-foreground]="task().completed"
+          [class.line-through]="completed()"
+          [class.text-muted-foreground]="completed()"
         >
           {{ task().title }}
         </p>
@@ -19,11 +19,7 @@
       </div>
 
       <div class="flex items-center gap-3 shrink-0">
-        <span class="inline-flex items-center text-xs text-muted-foreground gap-1">
-          <lucide-angular [img]="Clock" class="h-3 w-3" />
-          {{ task().durationMinutes }}m
-        </span>
-
+        
         <button
           [hlmDropdownMenuTrigger]="taskMenu"
           hlmBtn

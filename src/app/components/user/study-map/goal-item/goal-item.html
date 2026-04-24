@@ -59,17 +59,23 @@
       </div>
 
       <!-- Tasks List -->
-      @if (tasks().length > 0) {
-        <div class="flex flex-col gap-1">
-          @for (task of tasks(); track task.id) {
-            <app-task-item [task]="task" />
-          }
+      @if (isLoadingTasks()) {
+        <div class="py-4 text-center border-y border-dashed border-border mb-3 rounded-sm">
+          <p class="text-xs text-muted-foreground">Loading tasks...</p>
         </div>
       } @else {
-        <!-- Empty Tasks State -->
-        <div class="py-4 text-center border-y border-dashed border-border mb-3 rounded-sm">
-          <p class="text-xs text-muted-foreground">No tasks yet.</p>
-        </div>
+        @if (tasks().length > 0) {
+          <div class="flex flex-col gap-1">
+            @for (task of tasks(); track task.id) {
+              <app-task-item [task]="task" />
+            }
+          </div>
+        } @else {
+          <!-- Empty Tasks State -->
+          <div class="py-4 text-center border-y border-dashed border-border mb-3 rounded-sm">
+            <p class="text-xs text-muted-foreground">No tasks yet.</p>
+          </div>
+        }
       }
 
       <!-- Add Task bottom trigger -->
@@ -92,11 +98,7 @@
               <h2 hlmSheetTitle class="text-lg">Create task</h2>
               <p hlmSheetDescription class="text-sm">Add a task to "{{ goal().title }}".</p>
             </div>
-            <app-task-form />
-            <div hlmSheetFooter class="mt-2 flex flex-row items-center justify-end gap-3">
-              <button hlmBtn variant="outline" size="sm" hlmSheetClose>Cancel</button>
-              <button hlmBtn size="sm">Create task</button>
-            </div>
+            <app-task-form [goalId]="goal().id" />
           </hlm-sheet-content>
         </hlm-sheet>
       </div>

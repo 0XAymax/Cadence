@@ -1,13 +1,13 @@
 export interface GoalData {
-    title: string;
-    hours: number;
-    deadline: Date;
-    subjectId: string;
+  title: string;
+  hours: number;
+  deadline: Date;
+  subjectId: string;
 }
 export type GoalWithoutSubject = Omit<GoalData, 'subjectId'>;
 
 export interface Goal {
-  id: string
+  id: string;
   title: string;
   targetHoursPerWeek: number;
   progress: number;
@@ -27,4 +27,17 @@ export interface CreateGoalRequest {
   targetHoursPerWeek: number;
   progress: number;
   deadline: Date;
-}   
+}
+
+export interface CreateGoalTask {
+  title: string;
+  description: string;
+  status: 'PENDING' | 'COMPLETED';
+}
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  status: 'PENDING' | 'COMPLETED';
+}

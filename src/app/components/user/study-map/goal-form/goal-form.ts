@@ -45,10 +45,11 @@ export class GoalFormComponent {
         description: 'The new subject has been added to your study map.',
       });
     },
-    onError: () => {
-      toast.success('Subject created successfully', {
-        description: 'The new subject has been added to your study map.',
+    onError: (error) => {
+      toast.error('Failed to create subject', {
+        description: error,
       });
+      console.error('Failed to create goal :', error);
     },
   });
 

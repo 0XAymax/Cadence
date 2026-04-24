@@ -16,24 +16,6 @@ export interface SubjTask {
   completed: boolean;
 }
 
-export interface SubjGoal {
-  id: string;
-  title: string;
-  progress: number;
-  targetHoursPerWeek: number;
-  deadline: string;
-  status: string;
-  tasks: SubjTask[];
-}
-
-export interface SubjDoc {
-  id: string;
-  name: string;
-  description: string;
-  priority: 'HIGH' | 'MEDIUM' | 'LOW';
-  goals: SubjGoal[];
-}
-
 @Component({
   selector: 'app-study-map',
   standalone: true,

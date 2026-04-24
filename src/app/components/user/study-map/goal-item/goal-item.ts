@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, input, output, signal } from '@angular/core';
+import { Component, Input, Output, EventEmitter, input, output, signal, inject } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import {
   LucideAngularModule,
@@ -16,7 +16,8 @@ import { HlmSheetImports } from '@spartan-ng/helm/sheet';
 import { TaskFormComponent } from '../task-form/task-form';
 import { HlmProgressImports } from '@spartan-ng/helm/progress';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
-import { Goal, GoalTask } from '@app/core/models/goal.model';
+import { Goal, Task } from '@app/core/models/goal.model';
+import { GoalService } from '@app/core/services/goal.service';
 
 @Component({
   selector: 'app-goal-item',
@@ -35,10 +36,16 @@ import { Goal, GoalTask } from '@app/core/models/goal.model';
   templateUrl: './goal-item.html',
 })
 export class GoalItemComponent {
+  goalService = inject(GoalService);
   goal = input.required<Goal>();
   isExpanded = input<boolean>(false);
   toggleExpand = output<void>();
-  tasks = signal<GoalTask[]>([]);
+  tasks = this.goalService.allTasks.data;
+  isLoadingTasks = this.goalService.allTasks.isLoading;
+
+  ngOnInit() {
+    this.goalService.loadAllTasks(this.goal().id).subscribe();
+  }
 
   protected ChevronDown = ChevronDown;
   protected ChevronRight = ChevronRight;
