@@ -71,69 +71,71 @@
                     ></lucide-angular>
                   </button>
                 </h3>
-                <hlm-accordion-content class="pt-4 pb-2 space-y-3">
-                  @for (sub of sessionRes.subSessions; track sub.id) {
-                    <div
-                      class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 gap-4 border rounded-md bg-muted/20"
-                    >
-                      <div class="flex flex-col gap-1">
-                        <div class="flex items-center gap-2">
-                          <span class="font-medium text-sm text-foreground">{{
-                            sub.subjectName || 'Unknown Subject'
-                          }}</span>
-                          <span
-                            hlmBadge
-                            [variant]="getBadgeVariant(sub.status)"
-                            class="text-[10px] px-2 py-0 h-4"
-                          >
-                            {{ sub.status }}
-                          </span>
+                <hlm-accordion-content class="overflow-hidden">
+                  <div class="pt-4 pb-2 space-y-3">
+                    @for (sub of sessionRes.subSessions; track sub.id) {
+                      <div
+                        class="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 gap-4 border rounded-md bg-muted/20"
+                      >
+                        <div class="flex flex-col gap-1">
+                          <div class="flex items-center gap-2">
+                            <span class="font-medium text-sm text-foreground">{{
+                              sub.subjectName || 'Unknown Subject'
+                            }}</span>
+                            <span
+                              hlmBadge
+                              [variant]="getBadgeVariant(sub.status)"
+                              class="text-[10px] px-2 py-0 h-4"
+                            >
+                              {{ sub.status }}
+                            </span>
+                          </div>
+                          <div class="flex items-center gap-3 text-xs text-muted-foreground">
+                            <span class="font-semibold text-primary/80">{{
+                              sub.dayOfWeek | titlecase
+                            }}</span>
+                            <span>{{ sub.startTime }} - {{ sub.endTime }}</span>
+                          </div>
                         </div>
-                        <div class="flex items-center gap-3 text-xs text-muted-foreground">
-                          <span class="font-semibold text-primary/80">{{
-                            sub.dayOfWeek | titlecase
-                          }}</span>
-                          <span>{{ sub.startTime }} - {{ sub.endTime }}</span>
-                        </div>
-                      </div>
 
-                      <div class="flex items-center gap-2 self-end sm:self-auto">
-                        @if (sub.status === 'PENDING') {
-                          <button
-                            hlmBtn
-                            size="sm"
-                            variant="outline"
-                            class="h-8 gap-2"
-                            (click)="onActionClick($event, sub, 'start')"
-                          >
-                            <lucide-angular [img]="PlayCircle" class="h-4 w-4"></lucide-angular>
-                            Start
-                          </button>
-                        } @else if (sub.status === 'INCOMPLETED') {
-                          <button
-                            hlmBtn
-                            size="sm"
-                            class="h-8 gap-2 bg-green-600 hover:bg-green-700 text-white"
-                            (click)="onActionClick($event, sub, 'complete')"
-                          >
-                            <lucide-angular [img]="CheckCircle2" class="h-4 w-4"></lucide-angular>
-                            Complete
-                          </button>
-                        } @else {
-                          <button
-                            hlmBtn
-                            size="sm"
-                            variant="ghost"
-                            class="h-8 w-8 p-0"
-                            (click)="onActionClick($event, sub, 'view')"
-                          >
-                            <lucide-angular [img]="Clock" class="h-4 w-4"></lucide-angular>
-                            <span class="sr-only">View</span>
-                          </button>
-                        }
+                        <div class="flex items-center gap-2 self-end sm:self-auto">
+                          @if (sub.status === 'PENDING') {
+                            <button
+                              hlmBtn
+                              size="sm"
+                              variant="outline"
+                              class="h-8 gap-2"
+                              (click)="onActionClick($event, sub, 'start')"
+                            >
+                              <lucide-angular [img]="PlayCircle" class="h-4 w-4"></lucide-angular>
+                              Start
+                            </button>
+                          } @else if (sub.status === 'INCOMPLETED') {
+                            <button
+                              hlmBtn
+                              size="sm"
+                              class="h-8 gap-2 bg-green-600 hover:bg-green-700 text-white"
+                              (click)="onActionClick($event, sub, 'complete')"
+                            >
+                              <lucide-angular [img]="CheckCircle2" class="h-4 w-4"></lucide-angular>
+                              Complete
+                            </button>
+                          } @else {
+                            <button
+                              hlmBtn
+                              size="sm"
+                              variant="ghost"
+                              class="h-8 w-8 p-0"
+                              (click)="onActionClick($event, sub, 'view')"
+                            >
+                              <lucide-angular [img]="Clock" class="h-4 w-4"></lucide-angular>
+                              <span class="sr-only">View</span>
+                            </button>
+                          }
+                        </div>
                       </div>
-                    </div>
-                  }
+                    }
+                  </div>
                 </hlm-accordion-content>
               </hlm-accordion-item>
             </hlm-accordion>
