@@ -54,11 +54,14 @@ export class ChatService {
   }
 
   connectAndSubscribe(groupId: string): void {
+    const token = this.authService.getAccessToken();
+    if (!token) return;
+    const wsUrl = environment.apiUrl.replace(/^http/, 'ws') + '/ws';
     // 1. Configure the STOMP Client
     this.stompClient = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
+      brokerURL: wsUrl,
       connectHeaders: {
-        Authorization: `Bearer ${this.authService.getAccessToken()}`, // Critical for your backend Interceptor
+        Authorization: `Bearer ${token}`, // Critical for your backend Interceptor
       },
       debug: (str) => {
         console.log(str); // Useful for development
