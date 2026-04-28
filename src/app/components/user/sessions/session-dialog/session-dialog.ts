@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { form, FormField, FormRoot, required } from '@angular/forms/signals';
+import { applyEach, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
 import {
   CreateSessionRequest,
   CreateSessionResponse,
@@ -105,6 +105,14 @@ export class SessionDialogComponent {
       required(schema.weeklySession.startTime, { message: 'Week session start time is required' });
       required(schema.weeklySession.status, { message: 'Week session status is required' });
       required(schema.weeklySession.title, { message: 'Week session title is required' });
+      minLength(schema.subSessions, 1, { message: 'At least one sub session is required' });
+      applyEach(schema.subSessions, (subSession) => {
+        required(subSession.dayOfWeek, { message: 'Day of week is required' });
+        required(subSession.startTime, { message: 'Sub session start time is required' });
+        required(subSession.endTime, { message: 'Sub session end time is required' });
+        required(subSession.status, { message: 'Sub session status is required' });
+        required(subSession.subjectId, { message: 'Subject is required' });
+      });
     },
     {
       submission: {
@@ -112,7 +120,12 @@ export class SessionDialogComponent {
           const payload = this.sessionModel();
           const existing = this.session();
           if (existing) {
-            console.log('Updating session with id:', existing.weeklySession.id, 'and payload:', payload);
+            console.log(
+              'Updating session with id:',
+              existing.weeklySession.id,
+              'and payload:',
+              payload,
+            );
             this.updateSessionMutation.mutate({ id: existing.weeklySession.id, payload });
           } else {
             console.log('Creating session with payload:', payload);
