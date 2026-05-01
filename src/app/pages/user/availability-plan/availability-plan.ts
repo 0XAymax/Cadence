@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
+import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { PlanHeaderComponent } from '../../../components/user/availability-plan/plan-header/plan-header';
 import {
   WeeklyGridComponent,
@@ -11,7 +13,14 @@ import { PageActionsBarComponent } from '../../../components/user/availability-p
   selector: 'app-availability-plan',
   templateUrl: './availability-plan.html',
   standalone: true,
-  imports: [CommonModule, PlanHeaderComponent, WeeklyGridComponent, PageActionsBarComponent],
+  imports: [
+    CommonModule,
+    PlanHeaderComponent,
+    WeeklyGridComponent,
+    PageActionsBarComponent,
+    HlmButtonImports,
+    RouterLink,
+  ],
 })
 export class AvailibilityPlan {
   planConfig = {

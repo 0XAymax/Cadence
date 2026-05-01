@@ -113,7 +113,7 @@ export class WeeklyGridComponent {
       }
     }
 
-    return isSelected ? 'bg-primary border-primary' : 'bg-background hover:bg-accent';
+    return isSelected ? 'bg-primary/50 border-primary' : 'bg-background hover:bg-accent';
   }
 
   emitGrid() {

@@ -99,6 +99,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/user/availability-plan/availability-plan').then((m) => m.AvailibilityPlan),
       },
+      {
+        path: 'availability-plan/list',
+        loadComponent: () =>
+          import('./pages/user/availability-list/availability-list').then((m) => m.AvailabilityListComponent),
+      }
     ],
   },
   {

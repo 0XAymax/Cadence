@@ -1,10 +1,23 @@
-<div
-  class="flex flex-col h-full bg-card text-card-foreground rounded-lg shadow-sm border border-border"
->
-  <app-plan-header (configChanged)="onConfigChanged($event)"> </app-plan-header>
+<div class="h-full flex flex-col space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-3xl font-bold tracking-tight text-foreground">Availability Plan</h1>
+      <p class="text-sm text-muted-foreground mt-1">
+        Set up your weekly schedule and let the platform organize your study sessions.
+      </p>
+    </div>
+    <a hlmBtn variant="outline" routerLink="list">View availability plans</a>
+  </div>
 
-  <app-weekly-grid #weeklyGrid (gridUpdated)="onGridUpdated($event)"> </app-weekly-grid>
+  <div
+    class="flex flex-col flex-1 bg-card text-card-foreground rounded-lg border border-border min-h-0"
+  >
+    <app-plan-header (configChanged)="onConfigChanged($event)"> </app-plan-header>
 
-  <app-page-actions-bar (onReset)="weeklyGrid.resetGrid()" (onSave)="onSave()">
-  </app-page-actions-bar>
+    <app-weekly-grid #weeklyGrid (gridUpdated)="onGridUpdated($event)"> </app-weekly-grid>
+
+    <app-page-actions-bar (onReset)="weeklyGrid.resetGrid()" (onSave)="onSave()">
+    </app-page-actions-bar>
+  </div>
 </div>

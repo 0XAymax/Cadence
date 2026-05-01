@@ -88,7 +88,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       lucideUsers,
       lucideMap,
       lucideClock,
-      lucideCheck
+      lucideCheck,
     }),
   ],
 })
@@ -131,12 +131,12 @@ export class AppSidebar {
     },
     {
       title: 'Groups',
-      url:  'groups',
+      url: 'groups',
       icon: 'lucideUsers',
     },
     {
       title: 'Availability Plan',
-      url: 'availability-plan',
+      url: 'availability-plan/list',
       icon: 'lucideCheck',
     },
     {

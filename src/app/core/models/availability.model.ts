@@ -1,11 +1,11 @@
-interface Plan {
+export interface Plan {
   id: string;
   title: string;
   availabilityStatus: 'ACTIVE' | 'DISABLED';
   createdAt: string;
 }
 
-interface slot {
+export interface slot {
   id: string;
   dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
   start: string;
