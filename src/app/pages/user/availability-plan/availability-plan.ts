@@ -107,14 +107,29 @@ export class AvailibilityPlan implements OnInit {
     },
   });
 
+  readonly availabilityUpdateMutation = createMutation({
+    mutationFn: (data: { planId: string; slots: SlotRange[] }) => {
+      return this.availabilityService.updateAvailabilityPlan(data.planId, data.slots);
+    },
+    onSuccess: () => {
+      toast.success('Plan updated successfully');
+      this.router.navigate(['/user/availability-plan/list']);
+    },
+    onError: (err) => {
+      toast.error('Error updating plan:', { description: err });
+    },
+  });
+
   onSave() {
     const config = this.planConfig();
     if (this.mode() === 'edit') {
       // Ideally an update mutation here! But user request said save logic is there, we just need the modes working.
       // we can simulate an update and go back to view mode.
       console.log('Update Plan:', { config, slots: this.slots });
-      toast.success('Plan updated successfully');
-      this.mode.set('view');
+      this.availabilityUpdateMutation.mutate({
+        planId: this.planId()!,
+        slots: this.slots,
+      });
       return;
     }
 
