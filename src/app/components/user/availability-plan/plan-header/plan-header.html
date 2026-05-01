@@ -1,0 +1,28 @@
+<div class="flex items-center justify-between p-6 border-b border-border">
+  <div class="flex flex-col gap-1">
+    <label for="plan-title" class="text-sm font-medium text-foreground">Plan Title</label>
+    <input
+      id="plan-title"
+      type="text"
+      [(ngModel)]="title"
+      placeholder="e.g., Summer Schedule"
+      class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+    />
+  </div>
+
+  <div class="flex items-center gap-2">
+    <span class="text-sm font-medium">{{ status }}</span>
+    <button
+      role="switch"
+      [attr.aria-checked]="status === 'ACTIVE'"
+      (click)="toggleStatus()"
+      class="peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input"
+      [attr.data-state]="status === 'ACTIVE' ? 'checked' : 'unchecked'"
+    >
+      <span
+        class="pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+        [attr.data-state]="status === 'ACTIVE' ? 'checked' : 'unchecked'"
+      ></span>
+    </button>
+  </div>
+</div>

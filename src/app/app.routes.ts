@@ -94,6 +94,11 @@ export const routes: Routes = [
         path: 'logout',
         loadComponent: () => import('./pages/user/logout/logout').then((m) => m.LogoutComponent),
       },
+      {
+        path: 'availability-plan',
+        loadComponent: () =>
+          import('./pages/user/availability-plan/availability-plan').then((m) => m.AvailibilityPlan),
+      },
     ],
   },
   {
