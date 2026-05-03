@@ -54,7 +54,7 @@ export class SignIn {
             toast.success('Login successful!', {
               description: 'Welcome back!',
             });
-            this.router.navigate(['/user/dashboard']);
+            this.router.navigate(['/user/dashboard']); // redirection spot for mfa verification
           } catch (err: any) {
             const message = extractErrorMessage(err);
             toast.error('Login failed', {
