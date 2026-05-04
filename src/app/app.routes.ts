@@ -9,6 +9,9 @@ import { authGuard } from './core/guards/auth.guard';
 import { guestGuard } from './core/guards/guest.guard';
 import { ServerErrorPage } from './pages/server-error/server-error';
 import { GroupService } from './core/services/group.service';
+import { mfaGuard } from './core/guards/mfa.guard';
+import { MfaType } from './pages/auth/mfa/mfa-type/mfa-type';
+import { MfaVerify } from './pages/auth/mfa/mfa-verify/mfa-verify';
 
 export const routes: Routes = [
   {
@@ -35,6 +38,20 @@ export const routes: Routes = [
     path: 'sign-up',
     canMatch: [guestGuard],
     component: SignUp,
+  },
+  {
+    path: "auth/mfa",
+    canMatch: [mfaGuard],
+    children: [
+      {
+        path: "type",
+        component: MfaType,
+      },
+      {
+        path: "verify",
+        component: MfaVerify,
+      }
+    ]
   },
   {
     path: 'forbidden',

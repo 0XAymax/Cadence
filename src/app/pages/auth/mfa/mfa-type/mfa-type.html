@@ -1,0 +1,27 @@
+<div class="flex items-center justify-center min-h-screen bg-background p-4">
+  <div hlmCard class="w-full max-w-md border border-border rounded-xl p-6 sm:p-8 space-y-15">
+    <div class="flex flex-col items-center space-y-2 mb-[-10px] text-center">
+      <app-logo size="md" />
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Two-Factor Authentic    ation</h1>
+      <p class="text-sm text-slate-400">Select a method to receive your verification code.</p>
+    </div>
+
+    <div class="space-y-4">
+      <button hlmBtn variant="default" class="w-full !bg-primary h-auto flex items-center justify-start p-4 space-x-4 border-slate-700 hover:!bg-slate-800 hover:text-white"
+              (click)="selectMethod('AUTHENTICATOR')">
+            <lucide-angular [img]="Smartphone" class="h-7 w-7 text-white"></lucide-angular>
+            <div class="text-left flex-1">
+            <div class="font-semibold text-lg">Authenticator App</div>
+            <div class="text-xs text-gray-100 font-normal mt-0.5 ">Enter a code from your authenticator app</div>
+            </div>
+      </button>
+
+      <p class="text-center text-sm text-muted-foreground">
+          Another way,
+          <a (click)="selectMethod('EMAIL')" class="font-medium hover:underline underline-offset-4">
+            send code via your email
+          </a>
+        </p>
+    </div>
+  </div>
+</div>
