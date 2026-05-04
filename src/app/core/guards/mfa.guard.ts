@@ -13,7 +13,7 @@ export const mfaGuard: CanActivateFn = () => {
         return false;
     }
 
-    if (currentUser.role === 'PRE_AUTH') {
+    if (currentUser.role === 'ROLE_PRE_AUTH') {
         return true;
     }
 

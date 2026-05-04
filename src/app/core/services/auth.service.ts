@@ -37,7 +37,9 @@ export class AuthService {
   login(payload: LoginRequest) {
     return this.http.post<AuthResponse>(`${this.url}/login`, payload).pipe(
       tap((response) => {
-        this.setTokens(response.tokens);
+        if (response.tokens) {
+          this.setTokens(response.tokens);
+        }
         this.currentUser.set(response.user);
         localStorage.setItem(this.USER_KEY, JSON.stringify(response.user));
       }),
@@ -47,7 +49,7 @@ export class AuthService {
   register(payload: RegisterRequest) {
     return this.http.post<AuthResponse>(`${this.url}/auth/signUp`, payload).pipe(
       tap((response) => {
-        this.setTokens(response.tokens);
+        this.setTokens(response.tokens!);
         this.currentUser.set(response.user);
       }),
     );
