@@ -1,42 +1,44 @@
-import { Component, inject, signal } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, inject, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { LucideAngularModule, Mail, Smartphone, ShieldCheck } from 'lucide-angular';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
-import { MfaMethod } from "@app/core/models/mfa-type.model";
-import { MfaService } from "@app/core/services/mfa.service";
-import { finalize } from "rxjs";
+import { MfaMethod } from '@app/core/models/mfa-type.model';
+import { MfaService } from '@app/core/services/mfa.service';
+import { finalize } from 'rxjs';
 import { toast } from 'ngx-sonner';
-import  { LogoComponent } from "@app/components/logo/Logo";
+import { LogoComponent } from '@app/components/logo/Logo';
+import { createMutation } from '@app/core/utils/mutation.helper';
 
 @Component({
   selector: 'app-mfa-type',
   standalone: true,
-  imports: [
-    LucideAngularModule,
-    ...HlmButtonImports,
-    ...HlmCardImports,
-    LogoComponent,
-  ],
+  imports: [LucideAngularModule, ...HlmButtonImports, ...HlmCardImports, LogoComponent],
   templateUrl: './mfa-type.html',
 })
-export class MfaType{
+export class MfaType {
   private mfaService = inject(MfaService);
-  private router = inject(Router)
-  readonly Mail = Mail; readonly Smartphone = Smartphone; readonly ShieldCheck = ShieldCheck;
+  private router = inject(Router);
+  readonly Mail = Mail;
+  readonly Smartphone = Smartphone;
+  readonly ShieldCheck = ShieldCheck;
 
-  isLoading = signal(false);
+  readonly triggerEmailCodeMutation = createMutation({
+    mutationFn: () => this.mfaService.triggerEmailCode(),
+    onSuccess: () => {
+      this.router.navigate(['/auth/mfa/verify']);
+      toast.success('Verification code sent to your email.');
+    },
+    onError: (error) => {
+      toast.error('Could not send email.', { description: error });
+    },
+  });
 
-  selectMethod(method: MfaMethod) {
+  selectMethod(event: Event, method: MfaMethod) {
+    event.stopPropagation();
     this.mfaService.selectedMethod.set(method);
     if (method === 'EMAIL') {
-      this.isLoading.set(true);
-      this.mfaService.triggerEmailCode()
-        .pipe(finalize(() => this.isLoading.set(false)))
-        .subscribe({
-          next: () => this.router.navigate(['/auth/mfa/verify']),
-          error: () => toast.error('Could not send email. Please try again.')
-        })
+      this.triggerEmailCodeMutation.mutate({});
     } else if (method === 'AUTHENTICATOR') {
       this.router.navigate(['/auth/mfa/verify']);
     }
