@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, output, signal } from '@angular/core';
-import { form, FormField, FormRoot, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, min, required } from '@angular/forms/signals';
 import { CreateGoalRequest, Goal, UpdateGoalRequest } from '@app/core/models/goal.model';
 import { GoalService } from '@app/core/services/goal.service';
 import { createMutation } from '@app/core/utils/mutation.helper';
@@ -40,7 +40,6 @@ export class GoalFormDialogComponent {
         this.goalModel.set({
           title: existing.title,
           targetHoursPerWeek: existing.targetHoursPerWeek,
-          deadline: new Date(existing.deadline),
           progress: existing.progress,
         });
       }
@@ -50,7 +49,6 @@ export class GoalFormDialogComponent {
   goalModel = signal<CreateGoalRequest>({
     title: '',
     targetHoursPerWeek: 0,
-    deadline: new Date(),
     progress: 0,
   });
 
@@ -93,7 +91,9 @@ export class GoalFormDialogComponent {
     (schema) => {
       required(schema.title);
       required(schema.targetHoursPerWeek);
-      required(schema.deadline);
+      min(schema.targetHoursPerWeek, 1, {
+        message: 'Target hours must be greater than 0',
+      });
     },
     {
       submission: {

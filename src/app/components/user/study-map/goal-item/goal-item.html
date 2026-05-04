@@ -23,11 +23,7 @@
         <lucide-angular [img]="Clock" class="h-3.5 w-3.5" />
         {{ goal().targetHoursPerWeek }}h/wk
       </div>
-      <div class="flex items-center gap-1.5" title="Deadline">
-        <lucide-angular [img]="Calendar" class="h-3.5 w-3.5" />
-        {{ goal().deadline | date: 'shortDate' }}
-      </div>
-
+   
       <div class="flex items-center gap-1 ml-2" (click)="$event.stopPropagation()">
         <button
           [hlmDropdownMenuTrigger]="goalMenu"

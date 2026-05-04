@@ -50,18 +50,6 @@
         </div>
 
         <div class="space-y-2">
-          <label hlmLabel for="goal-deadline">Deadline</label>
-          <input hlmInput id="goal-deadline" type="date" [formField]="goalForm.deadline" />
-          @if (goalForm.deadline().touched() && goalForm.deadline().invalid()) {
-            <div class="text-xs text-destructive">
-              @for (error of goalForm.deadline().errors(); track error) {
-                <p>{{ error.message }}</p>
-              }
-            </div>
-          }
-        </div>
-
-        <div class="space-y-2">
           <label hlmLabel for="goal-subject">Subject</label>
           <!-- Pre-selected subject dropdown (disabled or shown as read-only) -->
           <input
