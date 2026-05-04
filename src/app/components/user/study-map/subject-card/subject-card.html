@@ -101,6 +101,7 @@
   [state]="createGoalDialogState()"
   (dialogStateChange)="createGoalDialogState.set($event)"
   [SubjectName]="subject().name"
+  [subjectId]="subject().id"
 >
 </app-goal-form-dialog>
 <app-subject-form-dialog
