@@ -54,3 +54,16 @@ export interface CreateSessionResponse {
 }
 
 export type UpdateSessionRequest = Partial<CreateSessionRequest>;
+
+export interface SubjectGoalPair {
+  subjectId: string;
+  selectedGoalIds: string[];
+}
+
+export interface GenerateSessionRequest {
+  title: string;
+  goals: string[];
+  availabilityPlanID: string;
+  usePriority: boolean;
+  subjectGoalPairs: SubjectGoalPair[];
+}
