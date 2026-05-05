@@ -7,11 +7,18 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmCheckboxImports } from '@spartan-ng/helm/checkbox';
-import { GenerateSessionRequest, SubjectGoalPair } from '@app/core/models/session.model';
+import {
+  GenerateSessionModel,
+  GenerateSessionRequest,
+  SubjectGoalPair,
+} from '@app/core/models/session.model';
 import { Goal } from '@app/core/models/goal.model';
 import { SubjectService } from '@app/core/services/subject.service';
 import { GoalService } from '@app/core/services/goal.service';
 import { AvailabilityPlanService } from '@app/core/services/availability-plan.service';
+import { createMutation } from '@app/core/utils/mutation.helper';
+import { SessionService } from '@app/core/services/session.service';
+import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-generate-week-dialog',
@@ -30,6 +37,7 @@ import { AvailabilityPlanService } from '@app/core/services/availability-plan.se
   templateUrl: './generate-week-dialog.html',
 })
 export class GenerateWeekDialogComponent {
+  private sessionService = inject(SessionService);
   private subjectService = inject(SubjectService);
   private goalService = inject(GoalService);
   private availabilityService = inject(AvailabilityPlanService);
@@ -41,9 +49,9 @@ export class GenerateWeekDialogComponent {
   state = input<'open' | 'closed'>('closed');
   dialogStateChange = output<'open' | 'closed'>();
 
-  sessionModel = signal<GenerateSessionRequest>({
+  sessionModel = signal<GenerateSessionModel>({
     title: '',
-    goals: [],
+    weekStartDate: new Date().toISOString().split('T')[0], // Default to today
     availabilityPlanID: '',
     usePriority: false,
     subjectGoalPairs: [
@@ -54,10 +62,23 @@ export class GenerateWeekDialogComponent {
     ],
   });
 
+  generateSessionMutation = createMutation({
+    mutationFn: (payload: GenerateSessionRequest) =>
+      this.sessionService.generateWeeklyPlan(payload),
+    onSuccess: () => {
+      toast.success('Generated session successfully:');
+      this.close();
+    },
+    onError: (error) => {
+      toast.error('Error generating session:', { description: error });
+    },
+  });
+
   sessionForm = form(
     this.sessionModel,
     (schema) => {
       required(schema.title, { message: 'Title is required' });
+      required(schema.weekStartDate, { message: 'Week start date is required' });
       required(schema.availabilityPlanID, { message: 'Availability plan is required' });
       minLength(schema.subjectGoalPairs, 1, { message: 'At least one subject is required' });
       applyEach(schema.subjectGoalPairs, (pair) => {
@@ -69,8 +90,9 @@ export class GenerateWeekDialogComponent {
       submission: {
         action: async () => {
           const model = this.sessionModel();
-          console.log('Submitting session generation with model:', model);
-          this.close();
+          const request = this.mapFormToRequest(model);
+          console.log('Submitting session generation with request:', request);
+          this.generateSessionMutation.mutate(request);
         },
       },
     },
@@ -165,5 +187,23 @@ export class GenerateWeekDialogComponent {
     return (
       this.sessionModel().subjectGoalPairs[pairIndex]?.selectedGoalIds.includes(goalId) ?? false
     );
+  }
+
+  getAvailableSubjectsForPair(currentPairIndex: number) {
+    const otherSelectedSubjectIds = this.sessionModel()
+      .subjectGoalPairs.map((pair, index) => (index !== currentPairIndex ? pair.subjectId : ''))
+      .filter((id) => id !== '');
+    return this.subjects().filter((subject) => !otherSelectedSubjectIds.includes(subject.id));
+  }
+
+  mapFormToRequest(model: GenerateSessionModel): GenerateSessionRequest {
+    const goalsList = model.subjectGoalPairs.flatMap((pair) => pair.selectedGoalIds);
+    return {
+      title: model.title,
+      weekStartDate: model.weekStartDate,
+      availabilityPlanID: model.availabilityPlanID,
+      usePriority: model.usePriority,
+      goalsList,
+    };
   }
 }

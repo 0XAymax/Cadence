@@ -5,6 +5,7 @@ import {
   CreateSessionRequest,
   CreateSessionResponse,
   CreateSubSessionResponse,
+  GenerateSessionRequest,
   UpdateSessionRequest,
 } from '../models/session.model';
 import { createQuery } from '../utils/query.helper';
@@ -76,5 +77,9 @@ export class SessionService {
           );
         }),
       );
+  }
+
+  public generateWeeklyPlan(payload: GenerateSessionRequest) {
+    return this.http.post<CreateSessionResponse>(`${this.url}/generate`, payload);
   }
 }

@@ -60,10 +60,18 @@ export interface SubjectGoalPair {
   selectedGoalIds: string[];
 }
 
-export interface GenerateSessionRequest {
+export interface GenerateSessionModel {
   title: string;
-  goals: string[];
+  weekStartDate: string; // YYYY-MM-DD
   availabilityPlanID: string;
   usePriority: boolean;
   subjectGoalPairs: SubjectGoalPair[];
+}
+
+export interface GenerateSessionRequest {
+  title: string;
+  weekStartDate: string; // YYYY-MM-DD
+  availabilityPlanID: string;
+  usePriority: boolean;
+  goalsList: string[];
 }
