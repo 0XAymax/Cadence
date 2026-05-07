@@ -1,4 +1,4 @@
-import { Component, inject, input, signal, viewChild } from '@angular/core';
+import { Component, inject, input, output, signal, viewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -26,8 +26,8 @@ import { User } from '@app/core/models/user.model';
     ...HlmInputOtpImports,
     ...BrnInputOtpImports,
     LucideAngularModule,
-    MfaSetupModalComponent
-],
+    MfaSetupModalComponent,
+  ],
   templateUrl: './settings-mfa.html',
 })
 export class SettingsMfaComponent {
@@ -37,7 +37,8 @@ export class SettingsMfaComponent {
   readonly Mail = Mail;
   readonly Smartphone = Smartphone;
 
-  isDialogOpen = signal<boolean>(false);
+  state = input.required<'closed' | 'open'>();
+  dialogStateChange = output<'closed' | 'open'>();
   selectedMethodId = signal<string | null>(null);
   dialogStep = signal<'setup' | 'verify'>('setup');
   otpValue = signal('');
@@ -67,11 +68,11 @@ export class SettingsMfaComponent {
     this.selectedMethodId.set(methodId);
     this.dialogStep.set('setup');
     this.otpValue.set('');
-    this.isDialogOpen.set(true);
+    this.dialogStateChange.emit('open');
   }
 
   closeModal() {
-    this.isDialogOpen.set(false);
+    this.dialogStateChange.emit('closed');
     this.selectedMethodId.set(null);
     this.dialogStep.set('setup');
     this.otpValue.set('');
@@ -98,9 +99,10 @@ export class SettingsMfaComponent {
       toast.error('Please enter the full 6-digit OTP code');
       return;
     }
-    
+
     this.isVerifying.set(true);
-    this.mfaService.confirmSetup(code)
+    this.mfaService
+      .confirmSetup(code)
       .pipe(finalize(() => this.isVerifying.set(false)))
       .subscribe({
         next: () => {
@@ -110,10 +112,14 @@ export class SettingsMfaComponent {
         },
         error: (err) => {
           toast.error('Invalid code', {
-            description: err.error?.message || 'Please check your authenticator app and try again.'
+            description: err.error?.message || 'Please check your authenticator app and try again.',
           });
           this.otpValue.set('');
-        }
+        },
       });
+  }
+
+  onStateChange(event: 'closed' | 'open') {
+    this.dialogStateChange.emit(event);
   }
 }

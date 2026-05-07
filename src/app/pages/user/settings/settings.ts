@@ -14,6 +14,7 @@ import { User } from '@app/core/models/user.model';
 export class SettingsComponent {
   public settingsService = inject(SettingsService);
   profile = signal<User | null>(null);
+  mfaDialogState = signal<'closed' | 'open'>('closed');
 
   ngOnInit() {
     this.settingsService.getUserProfile().subscribe((profile) => {

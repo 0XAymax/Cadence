@@ -30,7 +30,7 @@
 </div>
 
 <!-- Modal Dialog -->
-<hlm-dialog [state]="isDialogOpen() ? 'open' : 'closed'">
+<hlm-dialog [state]="state()" (stateChanged)="onStateChange($event)">
   <hlm-dialog-content *hlmDialogPortal="let ctx" class="sm:max-w-106.25">
     @if (dialogStep() === 'setup') {
       <hlm-dialog-header>
