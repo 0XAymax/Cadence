@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SettingsProfileComponent } from '@app/components/user/settings-profile/settings-profile';
 import { SettingsMfaComponent } from '@app/components/user/settings-mfa/settings-mfa';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
 import { SettingsService } from '@app/core/services/settings.service';
+import { User } from '@app/core/models/user.model';
 
 @Component({
   selector: 'app-settings',
@@ -12,5 +13,11 @@ import { SettingsService } from '@app/core/services/settings.service';
 })
 export class SettingsComponent {
   public settingsService = inject(SettingsService);
-  profile = toSignal(this.settingsService.getUserProfile());
+  profile = signal<User | null>(null);
+
+  ngOnInit() {
+    this.settingsService.getUserProfile().subscribe((profile) => {
+      this.profile.set(profile);
+    });
+  }
 }

@@ -13,5 +13,17 @@ export interface User {
   isTotpEnabled?: boolean;
 }
 
-
 export type UserProfile = Omit<User, 'id' | 'username' | 'email' | 'role'>;
+
+export type UpdateUserDataRes = Omit<User, 'username' | 'email' | 'role' | 'profilePic'>;
+
+export interface UpdateProfilePayload {
+  firstName: string;
+  lastName: string;
+  phone: string;
+  gender: 'MALE' | 'FEMALE';
+}
+
+export interface ProfilePictureResponse {
+  profilePic: string;
+}

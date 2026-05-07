@@ -1,4 +1,4 @@
-import { Component, input, linkedSignal, inject, signal } from '@angular/core';
+import { Component, input, inject, signal, effect } from '@angular/core';
 import { form, FormField, required, FormRoot } from '@angular/forms/signals';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -6,7 +6,7 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmSelectImports } from '@spartan-ng/helm/select';
 import { BrnSelectImports } from '@spartan-ng/brain/select';
-import { User, UserProfile } from '@app/core/models/user.model';
+import { User, UpdateProfilePayload, ProfilePictureResponse } from '@app/core/models/user.model';
 import { toast } from 'ngx-sonner';
 import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { SettingsService } from '@app/core/services/settings.service';
@@ -14,8 +14,7 @@ import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { provideIcons } from '@ng-icons/core';
 import { lucideUpload } from '@ng-icons/lucide';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
-import { lastValueFrom } from 'rxjs';
-
+import { createMutation } from '@app/core/utils/mutation.helper';
 
 @Component({
   selector: 'app-settings-profile',
@@ -38,16 +37,73 @@ import { lastValueFrom } from 'rxjs';
 export class SettingsProfileComponent {
   user = input.required<User>();
   private readonly settingsService = inject(SettingsService);
-  
-  isAvatarDialogOpen = signal<boolean>(false);
 
-  profileModel = linkedSignal<UserProfile>(() => ({
-    firstName: this.user()?.firstName || '',
-    lastName: this.user()?.lastName || '',
-    phone: this.user()?.phone || '',
-    gender: this.user()?.gender || 'MALE',
-    profilePic: this.user()?.profilePic || '',
-  }));
+  isAvatarDialogOpen = signal<boolean>(false);
+  private previousProfilePic = signal<string>('');
+
+  profileModel = signal<UpdateProfilePayload>({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    gender: 'MALE',
+  });
+
+  profilePicture = signal<string>('');
+
+  constructor() {
+    effect(() => {
+      const currentUser = this.user();
+      if (currentUser) {
+        this.profileModel.set({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          phone: currentUser.phone || '',
+          gender: currentUser.gender,
+        });
+        this.profilePicture.set(currentUser.profilePic || '');
+      }
+    });
+  }
+
+  updateProfileMutation = createMutation({
+    mutationFn: (data: UpdateProfilePayload) => this.settingsService.updateUserProfile(data),
+    onSuccess: () => {
+      toast.success('Profile updated', {
+        description: 'Your profile settings have been saved successfully.',
+      });
+    },
+    onError: (error: string) => {
+      const currentUser = this.user();
+      if (currentUser) {
+        this.profileModel.set({
+          firstName: currentUser.firstName,
+          lastName: currentUser.lastName,
+          phone: currentUser.phone || '',
+          gender: currentUser.gender,
+        });
+      }
+      toast.error('Failed to update profile', {
+        description: error || 'An error occurred while saving your changes.',
+      });
+    },
+  });
+
+  uploadProfilePicMutation = createMutation({
+    mutationFn: (file: File) => this.settingsService.uploadProfilePic(file),
+    onSuccess: (response: ProfilePictureResponse) => {
+      this.profilePicture.set(response.profilePic);
+      this.isAvatarDialogOpen.set(false);
+      toast.success('Profile picture updated', {
+        description: 'Your profile picture has been changed successfully.',
+      });
+    },
+    onError: (error) => {
+      this.profilePicture.set(this.previousProfilePic());
+      toast.error('Failed to upload profile picture', {
+        description: error || 'An error occurred while uploading your picture.',
+      });
+    },
+  });
 
   profileForm = form(
     this.profileModel,
@@ -58,68 +114,37 @@ export class SettingsProfileComponent {
     {
       submission: {
         action: async () => {
-          const data = this.profileModel();
-          const toastId = toast.loading('Saving profile changes...');
-          try {
-            await lastValueFrom(this.settingsService.updateUserProfile({
-              firstName: data.firstName,
-              lastName: data.lastName,
-              phone: data.phone,
-              gender: data.gender
-            }));
-            
-            toast.success('Profile updated', {
-              id: toastId,
-              description: 'Your profile settings have been saved successfully.',
-            });
-            // Reload the page to reflect the changes globally after a short delay so the toast completes
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000);
-          } catch (error) {
-            toast.error('Failed to update profile', { 
-              id: toastId,
-              description: 'An error occurred while saving your changes.'
-            });
-          }
+          const formData = this.profileModel();
+          this.profileModel.set(formData);
+          this.updateProfileMutation.mutate(formData);
         },
       },
     },
   );
 
-  onSubmit(event: Event) {
-    event.preventDefault();
-    if (this.profileForm().invalid()) {
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!input.files?.length) {
       return;
     }
-    // Form action is handled via submission
-  }
 
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const toastId = toast.loading('Uploading profile picture...');
-      this.settingsService.uploadProfilePic(file).subscribe({
-        next: (res: any) => {
-          toast.success('Profile picture updated', { id: toastId });
-          // Update the local profile model with the new image URL if returned
-          if (res && res.profilePic) {
-            this.profileModel.update((model) => ({
-              ...model,
-              profilePic: res.profilePic,
-            }));
-          }
-          this.isAvatarDialogOpen.set(false);
-          // Reload the page to reflect the changes globally after a short delay so the toast completes
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        },
-        error: () => {
-          toast.error('Failed to upload profile picture', { id: toastId });
-        }
+    const file = input.files[0];
+
+    if (!file.type.startsWith('image/')) {
+      toast.error('Invalid file type', {
+        description: 'Please select an image file.',
       });
+      return;
     }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      this.previousProfilePic.set(this.profilePicture());
+      this.profilePicture.set(result);
+
+      this.uploadProfilePicMutation.mutate(file);
+    };
+    reader.readAsDataURL(file);
   }
 }

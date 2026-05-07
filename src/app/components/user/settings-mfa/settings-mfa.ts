@@ -12,7 +12,6 @@ import { MfaSetupModalComponent } from '../mfa-setup-modal/mfa-setup-modal';
 import { MfaService } from '@app/core/services/mfa.service';
 import { finalize } from 'rxjs';
 import { toast } from 'ngx-sonner';
-import { NgIcon } from "@ng-icons/core";
 
 @Component({
   selector: 'app-settings-mfa',
@@ -26,8 +25,7 @@ import { NgIcon } from "@ng-icons/core";
     ...HlmInputOtpImports,
     ...BrnInputOtpImports,
     LucideAngularModule,
-    MfaSetupModalComponent,
-    NgIcon
+    MfaSetupModalComponent
 ],
   templateUrl: './settings-mfa.html',
 })
