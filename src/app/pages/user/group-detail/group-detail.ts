@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
 import { GroupService } from '@app/core/services/group.service';
-import { GroupResponse, Member } from '@app/core/models/group.model';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
@@ -15,7 +14,8 @@ import { GroupSettingsTabComponent } from '@app/components/user/group-detail/gro
 import { toast } from 'ngx-sonner';
 import { extractErrorMessage } from '@app/core/utils/error.util';
 import { AlertService } from '@app/components/shared/alert/alert.service';
-import { readonly } from '@angular/forms/signals';
+import { SessionService } from '@app/core/services/session.service';
+
 
 @Component({
   selector: 'app-group-detail-page',
@@ -37,18 +37,20 @@ export class GroupDetailComponent {
   route = inject(ActivatedRoute);
   router = inject(Router);
   groupService = inject(GroupService);
+  sessionService = inject(SessionService);
   authService = inject(AuthService);
   alertService = inject(AlertService);
 
   groupId = signal<string>('');
   myRole = computed(() => this.group()?.userRole || null);
-  feed = signal<any[]>([]);
   activeTab = signal<'feed' | 'members' | 'chat' | 'settings'>('feed');
   shareDialogState = signal<'closed' | 'open'>('closed');
   readonly members = this.groupService.groupMembers.data;
   readonly group = this.groupService.currentGroup.data;
   readonly isGroupLoading = this.groupService.currentGroup.isLoading;
   readonly isMembersLoading = this.groupService.groupMembers.isLoading;
+  readonly sharedSessions = this.sessionService.sharedSessions.data;
+  readonly isSharedSessionsLoading = this.sessionService.sharedSessions.isLoading;
 
   constructor() {
     this.route.paramMap.subscribe((params) => {
@@ -58,7 +60,7 @@ export class GroupDetailComponent {
       this.groupId.set(id);
       this.groupService.getGroupDataById(id).subscribe();
       this.groupService.loadGroupMembers(id).subscribe();
-      this.feed = this.groupService.getGroupFeed(id) as any;
+      this.sessionService.loadSharedSessions(id).subscribe();
     });
   }
 
@@ -92,10 +94,6 @@ export class GroupDetailComponent {
         console.error('Error leaving group:', err);
       },
     });
-  }
-
-  onShareSession(sessionId: string) {
-    this.groupService.shareSession(this.groupId(), sessionId);
   }
 
   getUserInitials = (firstName: string, lastName: string) => {

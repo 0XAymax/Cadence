@@ -4,22 +4,53 @@
       <h3 hlmDialogTitle>Share a Session</h3>
       <p hlmDialogDescription>Select one of your completed sessions to share with the group.</p>
     </hlm-dialog-header>
-
-    <div class="py-4">
-      <!-- Mocking a select for a session -->
-      <div class="space-y-2">
-        <label hlmLabel>Completed Sessions</label>
-        <select hlmInput [(ngModel)]="selectedSessionId" class="w-full h-10 px-3 cursor-pointer">
-          <option value="">-- Choose a session --</option>
-          <option value="sess1">Data Structures - 2 hours</option>
-          <option value="sess2">Angular Signals - 1.5 hours</option>
-        </select>
+    <form [formRoot]="shareSessionForm">
+      <div class="py-4 space-y-6">
+        <div class="space-y-2">
+          <label hlmLabel>Completed Sessions</label>
+          <select
+            hlmInput
+            [formField]="shareSessionForm.sessionId"
+            class="w-full h-10 px-3 cursor-pointer"
+            >
+            <option value="">-- Choose a session --</option>
+            @for (session of sessions(); track session.weeklySession.id) {
+              <option [value]="session.weeklySession.id">{{ session.weeklySession.title }}</option>
+            }
+          </select>
+          @if (shareSessionForm.sessionId().touched() && shareSessionForm.sessionId().invalid()) {
+            <div class="text-xs text-destructive">
+              @for (error of shareSessionForm.sessionId().errors(); track error) {
+                <p>{{ error.message }}</p>
+              }
+            </div>
+          }
+        </div>
+        <div class="space-y-2">
+          <label hlmLabel>Permission</label>
+          <select
+            hlmInput
+            [formField]="shareSessionForm.permission"
+            class="w-full h-10 px-3 cursor-pointer"
+          >
+            <option value="">-- Select permission level --</option>
+            <option value="VIEW_ONLY">View Only</option>
+            <option value="EDIT">Can Edit</option>
+          </select>
+          @if (shareSessionForm.permission().touched() && shareSessionForm.permission().invalid()) {
+            <div class="text-xs text-destructive">
+              @for (error of shareSessionForm.permission().errors(); track error) {
+                <p>{{ error.message }}</p>
+              }
+            </div>
+          }
+        </div>
       </div>
-    </div>
 
-    <hlm-dialog-footer>
-      <button hlmBtn variant="outline" (click)="closeDialog(ctx)">Cancel</button>
-      <button hlmBtn (click)="confirm(ctx)" [disabled]="!selectedSessionId()">Share</button>
-    </hlm-dialog-footer>
+      <hlm-dialog-footer>
+        <button hlmBtn variant="outline" (click)="closeDialog(ctx)">Cancel</button>
+        <button hlmBtn type="submit" [disabled]="shareSessionForm().submitting() || shareSessionForm().invalid()">Share</button>
+      </hlm-dialog-footer>
+    </form>
   </hlm-dialog-content>
 </hlm-dialog>

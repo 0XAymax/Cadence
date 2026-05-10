@@ -6,6 +6,8 @@ import {
   CreateSessionResponse,
   CreateSubSessionResponse,
   GenerateSessionRequest,
+  SharedSession,
+  ShareSessionRequest,
   UpdateSessionRequest,
 } from '../models/session.model';
 import { createQuery } from '../utils/query.helper';
@@ -18,6 +20,7 @@ export class SessionService {
   readonly allSessions = createQuery<CreateSessionResponse[]>([]);
   readonly allGeneratedSessions = createQuery<CreateSessionResponse[]>([]);
   readonly sessionDetails = createQuery<CreateSessionResponse | null>(null);
+  readonly sharedSessions = createQuery<SharedSession[]>([]);
 
   public createSession(payload: CreateSessionRequest) {
     return this.http.post<CreateSessionResponse>(`${this.url}/create`, payload).pipe(
@@ -110,6 +113,30 @@ export class SessionService {
   public loadSessionDetails(sessionId: string) {
     return this.sessionDetails.load(
       this.http.get<CreateSessionResponse>(`${this.url}/details/${sessionId}`),
+    );
+  }
+
+  public shareSession(payload: ShareSessionRequest) {
+    return this.http.post<SharedSession>(`${this.url}/share`, payload).pipe(
+      tap((sharedSession) => {
+        this.sharedSessions.mutate((sessions) => [...sessions, sharedSession]);
+      }),
+    );
+  }
+
+  public unshareSession(sessionId: string, groupId: string) {
+    return this.http.delete(`${this.url}/${sessionId}/share/${groupId}`).pipe(
+      tap(() => {
+        this.sharedSessions.mutate((sessions) =>
+          sessions.filter((s) => !(s.sessionId === sessionId && s.groupId === groupId)),
+        );
+      }),
+    );
+  }
+
+  public loadSharedSessions(groupId: string) {
+    return this.sharedSessions.load(
+      this.http.get<SharedSession[]>(`${this.url}/shared/${groupId}`),
     );
   }
 }

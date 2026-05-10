@@ -1,8 +1,5 @@
 import { Injectable, signal, computed, inject, linkedSignal } from '@angular/core';
 import {
-  SharedSession,
-  Comment,
-  FeedSharedSession,
   GroupCreateRequest,
   GroupResponse,
   Member,
@@ -11,9 +8,10 @@ import {
 } from '../models/group.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { finalize, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { AuthService } from './auth.service';
 import { createQuery } from '../utils/query.helper';
+import { SharedSession, ShareSessionRequest } from '../models/session.model';
 
 @Injectable({
   providedIn: 'root',
@@ -167,96 +165,6 @@ export class GroupService {
 
   public getGroupById(id: string): GroupResponse | undefined {
     return this.allGroups.data().find((g) => g.id === id);
-  }
-
-  private requireCurrentUserId(): string {
-    const userId = this.currentUserId();
-
-    if (userId === null || userId === undefined) {
-      throw new Error('Current user is not loaded or not authenticated.');
-    }
-
-    return userId;
-  }
-
-  private _sharedSessions = signal<SharedSession[]>([
-    {
-      id: 'ss1',
-      sessionId: 'sess1',
-      groupId: 'g1',
-      sharedByUserId: 'user-2',
-      sharedAt: new Date(Date.now() - 3600000),
-    },
-  ]);
-
-  private _comments = signal<Comment[]>([
-    {
-      id: 'c1',
-      sharedSessionId: 'ss1',
-      userId: 'user-1',
-      content: 'Great job!',
-      createdAt: new Date(),
-    },
-  ]);
-
-  // Mock static users dictionary for fast resolution
-  private _mockUsers: Record<string, { initials: string; name: string }> = {
-    'user-1': { initials: 'AM', name: 'Aymane M.' },
-    'user-2': { initials: 'JD', name: 'John Doe' },
-    'user-3': { initials: 'AR', name: 'Alice Ray' },
-  };
-
-  // --- Group Detail Additions ---
-
-  public getGroupFeed(groupId: string) {
-    return computed<FeedSharedSession[]>(() => {
-      return this._sharedSessions()
-        .filter((s) => s.groupId === groupId)
-        .sort((a, b) => b.sharedAt.getTime() - a.sharedAt.getTime())
-        .map((s) => {
-          const u = this._mockUsers[s.sharedByUserId] || { initials: '?', name: 'Unknown' };
-          const sessionComments = this._comments()
-            .filter((c) => c.sharedSessionId === s.id)
-            .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-            .map((c) => {
-              const cu = this._mockUsers[c.userId] || { initials: '?', name: 'Unknown' };
-              return { ...c, userInitials: cu.initials, userName: cu.name };
-            });
-
-          return {
-            ...s,
-            userInitials: u.initials,
-            userName: u.name,
-            sessionTitle: 'Mock Session Title', // Real implementation would fetch this from session service
-            goalName: 'Mock Goal',
-            duration: 120, // 2 hours
-            status: 'COMPLETED',
-            comments: sessionComments,
-          };
-        });
-    });
-  }
-
-  public shareSession(groupId: string, sessionId: string) {
-    const newShare: SharedSession = {
-      id: Math.random().toString(36).substring(2, 9),
-      sessionId,
-      groupId,
-      sharedByUserId: this.requireCurrentUserId(),
-      sharedAt: new Date(),
-    };
-    this._sharedSessions.update((s) => [newShare, ...s]);
-  }
-
-  public addComment(sharedSessionId: string, content: string) {
-    const newComment: Comment = {
-      id: Math.random().toString(36).substring(2, 9),
-      sharedSessionId,
-      userId: this.requireCurrentUserId(),
-      content,
-      createdAt: new Date(),
-    };
-    this._comments.update((c) => [...c, newComment]);
   }
 
   public setGroupId(id: string) {

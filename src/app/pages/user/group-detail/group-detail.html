@@ -48,7 +48,7 @@
         </div>
 
         <div class="space-y-4">
-          @for (session of feed(); track session.id) {
+          @for (session of sharedSessions(); track session.sessionId) {
             <app-group-feed-card
               [session]="session"
             >
@@ -104,7 +104,7 @@
   <app-share-session-dialog
     [state]="shareDialogState()"
     (dialogStateChange)="shareDialogState.set($event)"
-    (confirmClick)="onShareSession($event)"
+    [groupId]="groupId()"
   >
   </app-share-session-dialog>
 }

@@ -75,3 +75,20 @@ export interface GenerateSessionRequest {
   usePriority: boolean;
   goalsList: string[];
 }
+
+export interface ShareSessionRequest {
+  sessionId: string;
+  groupId: string;
+  permission : 'VIEW_ONLY' | 'EDIT';
+}
+
+export interface SharedSession {
+  sessionId: string;
+  sessionTitle: string;
+  groupId: string;
+  groupName: string;
+  permission: 'VIEW_ONLY' | 'EDIT';
+  sharedAt: string;
+  sharedByUserId: string;
+  sharedByUsername: string;
+}
