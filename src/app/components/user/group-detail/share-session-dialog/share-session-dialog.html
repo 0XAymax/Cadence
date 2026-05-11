@@ -12,7 +12,7 @@
             hlmInput
             [formField]="shareSessionForm.sessionId"
             class="w-full h-10 px-3 cursor-pointer"
-            >
+          >
             <option value="">-- Choose a session --</option>
             @for (session of sessions(); track session.weeklySession.id) {
               <option [value]="session.weeklySession.id">{{ session.weeklySession.title }}</option>
@@ -49,7 +49,13 @@
 
       <hlm-dialog-footer>
         <button hlmBtn variant="outline" (click)="closeDialog(ctx)">Cancel</button>
-        <button hlmBtn type="submit" [disabled]="shareSessionForm().submitting() || shareSessionForm().invalid()">Share</button>
+        <button
+          hlmBtn
+          type="submit"
+          [disabled]="shareSessionForm().submitting() || shareSessionForm().invalid()"
+        >
+          Share
+        </button>
       </hlm-dialog-footer>
     </form>
   </hlm-dialog-content>

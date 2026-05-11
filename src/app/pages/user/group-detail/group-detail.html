@@ -47,10 +47,17 @@
           <button hlmBtn (click)="shareDialogState.set('open')">Share a session</button>
         </div>
 
+        @if (isSharedSessionsLoading()) {
+          <div class="flex items-center justify-center min-h-[30vh]">
+            <p class="text-muted-foreground">Loading shared sessions...</p>
+          </div>
+        } @else if(groupService.currentUserId(); as userId) {
         <div class="space-y-4">
           @for (session of sharedSessions(); track session.sessionId) {
             <app-group-feed-card
               [session]="session"
+              [userId]="userId"
+              [userRole]="myRole()"
             >
             </app-group-feed-card>
           } @empty {
@@ -59,6 +66,7 @@
             </div>
           }
         </div>
+        }
       </div>
 
       <!-- Members Tab -->

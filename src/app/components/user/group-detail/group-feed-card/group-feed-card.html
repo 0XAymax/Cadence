@@ -1,34 +1,70 @@
-<div hlmCard class="mb-4">
+<div hlmCard class="mb-4 w-full rounded-xl border border-border/70 shadow-sm">
   <div hlmCardHeader class="pb-2">
-    <div class="flex items-center gap-3">
-      <div
-        class="bg-muted flex items-center justify-center rounded-full h-10 w-10 text-sm font-medium"
-      >
-        {{ session().sharedByUsername.charAt(0).toUpperCase() }}
+    <div class="flex items-start justify-between gap-2">
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div
+          class="bg-muted text-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
+        >
+          {{ session().sharedByUsername.charAt(0).toUpperCase() }}
+        </div>
+
+        <div class="min-w-0">
+          <p class="text-sm font-semibold leading-4.5">
+            {{ session().sharedByUsername }}
+            <span class="text-muted-foreground font-normal">shared a session</span>
+          </p>
+          <p class="text-xs text-muted-foreground">
+            {{ session().sharedAt | date: 'mediumDate' }}
+          </p>
+        </div>
       </div>
-      <div>
-        <p class="text-sm font-medium">
-          {{ session().sharedByUsername }}
-          <span class="text-muted-foreground font-normal">shared a session</span>
-        </p>
-        <p class="text-xs text-muted-foreground">
-          {{ session().sharedAt | date: 'mediumDate' }}
-        </p>
+      <button
+        hlmBtn
+        variant="ghost"
+        size="icon"
+        class="h-7 w-7 shrink-0"
+        [hlmDropdownMenuTrigger]="sharedSessionMenu"
+        aria-label="Open shared session actions"
+      >
+        <lucide-angular [img]="MoreVertical" class="h-4 w-4"></lucide-angular>
+      </button>
+    </div>
+  </div>
+
+  <div hlmCardContent class="pt-0 pb-3">
+    <div class="rounded-lg border border-border bg-muted/40 px-3 py-2.5">
+      <div class="flex items-center justify-between gap-2">
+        <div class="min-w-0 space-y-0.5">
+          <h4 class="truncate text-sm font-semibold leading-5">{{ session().sessionTitle }}</h4>
+          <p class="text-xs text-muted-foreground">
+            {{ session().permission === 'EDIT' ? 'Can Edit' : 'View Only' }}
+          </p>
+        </div>
+        <span hlmBadge variant="secondary" class="shrink-0">{{ session().permission }}</span>
       </div>
     </div>
   </div>
 
-  <div hlmCardContent class="pb-3">
-    <div class="bg-muted/50 rounded-lg p-4 border border-border">
-      <div class="flex justify-between items-start mb-2">
-        <div>
-          <h4 class="font-semibold">{{ session().sessionTitle }}</h4>
-          <p class="text-sm text-muted-foreground">
-            Permission: {{ session().permission === 'EDIT' ? 'Can Edit' : 'View Only' }}
-          </p>
-        </div>
-        <span hlmBadge variant="secondary">{{ session().permission }}</span>
-      </div>
-    </div>
-  </div>
+  <ng-template #sharedSessionMenu>
+    <hlm-dropdown-menu>
+      <button hlmDropdownMenuItem class="gap-2 whitespace-nowrap">
+        <lucide-angular [img]="Eye" class="h-4 w-4"></lucide-angular>
+        View Session
+      </button>
+      @if (userId() === session().sharedByUserId) {
+        <hlm-dropdown-menu-separator></hlm-dropdown-menu-separator>
+        <button hlmDropdownMenuItem class="gap-2 whitespace-nowrap">
+          <lucide-angular [img]="Lock" class="h-4 w-4"></lucide-angular>
+          {{ session().permission === 'VIEW_ONLY' ? 'Can Edit' : 'View Only' }}
+        </button>
+      }
+      @if (userId() === session().sharedByUserId || userRole() === 'ADMIN' || userRole() === 'OWNER') {
+        <hlm-dropdown-menu-separator></hlm-dropdown-menu-separator>
+        <button hlmDropdownMenuItem class="gap-2 whitespace-nowrap" (click)="onUnshareSession()">
+          <lucide-angular [img]="Trash" class="h-4 w-4"></lucide-angular>
+          Unshare Session
+        </button>
+      }
+    </hlm-dropdown-menu>
+  </ng-template>
 </div>

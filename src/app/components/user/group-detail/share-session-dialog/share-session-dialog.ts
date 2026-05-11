@@ -10,7 +10,7 @@ import { SessionService } from '@app/core/services/session.service';
 import { form, required, FormRoot, FormField } from '@angular/forms/signals';
 import { createMutation } from '@app/core/utils/mutation.helper';
 import { ShareSessionRequest } from '@app/core/models/session.model';
-import { GroupService } from '@app/core/services/group.service';
+
 import { toast } from 'ngx-sonner';
 
 @Component({
