@@ -23,7 +23,8 @@ export class CarryOverDialogComponent {
 
   constructor() {
     effect(() => {
-      this.items.set(this.missedItems());
+      const raw = this.missedItems();
+      this.items.set(raw);
     });
   }
 
@@ -34,8 +35,13 @@ export class CarryOverDialogComponent {
   }
 
   handleAddToWeek(ctx: { close: () => void }) {
-    const selected = this.items().filter((item) => item.selected);
-    const requests: CreateSubSessionRequest[] = carryOverItemsToSubSessionRequests(this.items());
+    const requests: CreateSubSessionRequest[] = carryOverItemsToSubSessionRequests(
+      this.items(),
+    ).map((r) => ({
+      ...r,
+      startTime: r.startTime ? String(r.startTime).slice(0, 5) : r.startTime,
+      endTime: r.endTime ? String(r.endTime).slice(0, 5) : r.endTime,
+    }));
     this.carryOverSelected.emit(requests);
     this.dialogStateChange.emit('closed');
     ctx.close();
