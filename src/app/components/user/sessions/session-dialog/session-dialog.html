@@ -1,3 +1,11 @@
+<app-carry-over-dialog
+  [state]="carryOverDialogState()"
+  [missedItems]="carryOverItems()"
+  (dialogStateChange)="carryOverDialogState.set($event)"
+  (carryOverSelected)="onCarryOverSelected($event)"
+  (skip)="onCarryOverSkip()"
+/>
+
 <hlm-dialog [state]="state()" (stateChanged)="onStateChange($event)">
   <hlm-dialog-content
     *hlmDialogPortal="let ctx"

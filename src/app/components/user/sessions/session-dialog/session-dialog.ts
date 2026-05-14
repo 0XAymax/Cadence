@@ -5,6 +5,7 @@ import {
   CreateSessionResponse,
   UpdateSessionRequest,
   CreateWeeklySessionResponse,
+  CreateSubSessionRequest,
 } from '@app/core/models/session.model';
 import { SessionService } from '@app/core/services/session.service';
 import { SubjectService } from '@app/core/services/subject.service';
@@ -14,6 +15,8 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { toast } from 'ngx-sonner';
+import { CarryOverDialogComponent } from '../carry-over-dialog/carry-over-dialog';
+import { mapMissedToCarryOverItems } from '../carry-over-dialog/carry-over.utils';
 
 @Component({
   selector: 'app-session-dialog',
@@ -25,11 +28,16 @@ import { toast } from 'ngx-sonner';
     HlmButtonImports,
     HlmLabelImports,
     HlmInputImports,
+    CarryOverDialogComponent,
   ],
 })
 export class SessionDialogComponent {
   private subjectService = inject(SubjectService);
   private sessionService = inject(SessionService);
+
+  carryOverDialogState = signal<'closed' | 'open'>('closed');
+  carryOverItems = signal(mapMissedToCarryOverItems([]));
+  sessionsLoaded = signal(false);
   readonly timeSlots = [
     '08:00',
     '08:30',
@@ -79,6 +87,9 @@ export class SessionDialogComponent {
 
   ngOnInit() {
     this.subjectService.loadAllSubjects().subscribe();
+    this.sessionService.loadAllSessions().subscribe(() => {
+      this.sessionsLoaded.set(true);
+    });
   }
 
   constructor() {
@@ -86,9 +97,7 @@ export class SessionDialogComponent {
       const existing = this.session();
       if (existing) {
         const ws = existing.weeklySession as CreateWeeklySessionResponse;
-        // backend provides `weekYear` and `weekNumber`
         const { weekYear, weekNumber } = ws;
-        // set display label based on weekYear/weekNumber
         const weekStart = this.isoWeekStartFromYearAndNumber(weekYear, weekNumber);
         const label = weekStart
           ? `Week of ${weekStart.toLocaleString(undefined, { month: 'long' })} ${weekStart.getDate()}`
@@ -113,6 +122,50 @@ export class SessionDialogComponent {
         });
       }
     });
+
+    effect(() => {
+      const dialogState = this.state();
+      const loaded = this.sessionsLoaded();
+      if (dialogState === 'open' && !this.session() && loaded) {
+        this.checkForMissedSubSessions();
+      }
+    });
+  }
+
+  checkForMissedSubSessions() {
+    if (this.session()) return;
+
+    const allSessions = this.sessionService.allSessions.data();
+    if (allSessions.length === 0) return;
+
+    const sortedSessions = [...allSessions].sort((a, b) => {
+      const aWeek = a.weeklySession as CreateWeeklySessionResponse;
+      const bWeek = b.weeklySession as CreateWeeklySessionResponse;
+      if (aWeek.weekYear !== bWeek.weekYear) {
+        return bWeek.weekYear - aWeek.weekYear;
+      }
+      return bWeek.weekNumber - aWeek.weekNumber;
+    });
+
+    const lastSession = sortedSessions[0];
+    this.sessionService.loadMissingSubSession(lastSession.weeklySession.id).subscribe(() => {
+      const missed = this.sessionService.missedSubSessions.data();
+      if (missed.length > 0) {
+        this.carryOverItems.set(mapMissedToCarryOverItems(missed));
+        this.carryOverDialogState.set('open');
+      }
+    });
+  }
+
+  onCarryOverSelected(subSessions: CreateSubSessionRequest[]) {
+    this.sessionModel.update((model) => ({
+      ...model,
+      subSessions,
+    }));
+  }
+
+  onCarryOverSkip() {
+    // Dialog closes, form opens empty
   }
 
   createSessionMutation = createMutation({
