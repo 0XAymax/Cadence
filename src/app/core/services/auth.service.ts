@@ -1,5 +1,5 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -53,6 +53,11 @@ export class AuthService {
         this.currentUser.set(response.user);
       }),
     );
+  }
+
+  forgetPassword(identifier: string) {
+    const params = new HttpParams().set('identifier', identifier);
+    return this.http.post(`${this.url}/auth/forget-password`, null, { params, responseType: 'text' });
   }
 
   refresh() {
