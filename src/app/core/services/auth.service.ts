@@ -60,6 +60,10 @@ export class AuthService {
     return this.http.post(`${this.url}/auth/forget-password`, null, { params, responseType: 'text' });
   }
 
+  resetPassword(token: string, newPassword: string) {
+    return this.http.post(`${this.url}/auth/reset-password`, { token, newPassword }, { responseType: 'text' });
+  }
+
   refresh() {
     const refreshToken = this.getRefreshToken();
     return this.http
