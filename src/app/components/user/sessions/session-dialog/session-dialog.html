@@ -200,6 +200,19 @@
           >
             + Add Subsession
           </button>
+
+          @if (loadBalanceWarnings().length > 0) {
+            <div class="mt-4 space-y-2">
+              @for (warning of loadBalanceWarnings(); track $index) {
+                <div
+                  class="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200"
+                >
+                  <span class="text-base leading-none">⚠️</span>
+                  <p class="flex-1">{{ formatWarning(warning) }}</p>
+                </div>
+              }
+            </div>
+          }
         </div>
       </div>
       <hlm-dialog-footer class="mt-4 pt-4 border-t">

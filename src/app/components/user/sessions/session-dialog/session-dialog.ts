@@ -17,6 +17,11 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { toast } from 'ngx-sonner';
 import { CarryOverDialogComponent } from '../carry-over-dialog/carry-over-dialog';
 import { mapMissedToCarryOverItems } from '../carry-over-dialog/carry-over.utils';
+import {
+  getLoadBalanceWarnings,
+  formatWarningMessage,
+  type LoadBalanceWarning,
+} from './load-balancing.utils';
 
 @Component({
   selector: 'app-session-dialog',
@@ -84,6 +89,17 @@ export class SessionDialogComponent {
   state = input.required<'closed' | 'open'>();
   dialogStateChange = output<'closed' | 'open'>();
   subjects = this.subjectService.allSubjects.data;
+
+  loadBalanceWarnings = computed<LoadBalanceWarning[]>(() => {
+    const currentSubs = this.sessionModel().subSessions;
+    const previousSessions = this.sessionService.allSessions.data() || [];
+    const subjects = this.subjects() || [];
+    const currentSessionId = this.session()?.weeklySession.id;
+
+    return getLoadBalanceWarnings(currentSubs, previousSessions, subjects, currentSessionId);
+  });
+
+  formatWarning = formatWarningMessage;
 
   ngOnInit() {
     this.subjectService.loadAllSubjects().subscribe();
