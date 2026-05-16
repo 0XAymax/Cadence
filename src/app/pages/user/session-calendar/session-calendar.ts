@@ -29,4 +29,16 @@ export class SessionCalendarComponent {
   loadSession(id: string) {
     this.sessionService.loadSessionDetails(id).subscribe();
   }
+
+  getWeekLabel(weekYear: number, weekNumber: number): string {
+    const jan4 = new Date(weekYear, 0, 4);
+    const day = jan4.getDay();
+    const diffToMonday = jan4.getDate() - day + (day === 0 ? -6 : 1);
+    const startOfFirstWeek = new Date(weekYear, 0, diffToMonday);
+
+    const weekStart = new Date(startOfFirstWeek);
+    weekStart.setDate(weekStart.getDate() + (weekNumber - 1) * 7);
+
+    return `Week of ${weekStart.toLocaleString(undefined, { month: 'long' })} ${weekStart.getDate()}, ${weekStart.getFullYear()}`;
+  }
 }
