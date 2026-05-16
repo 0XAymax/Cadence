@@ -28,22 +28,65 @@
         </div>
 
         <div class="space-y-2">
-          <label hlmLabel class="font-medium text-sm">Week Start Date</label>
-          <input
-            hlmInput
-            type="datetime-local"
-            [formField]="sessionForm.weekStartDate"
-            id="weekStartDate"
-            placeholder="e.g. 2023-10-01"
-            class="w-full"
-          />
-          @if (sessionForm.weekStartDate().touched() && sessionForm.weekStartDate().invalid()) {
+          <label hlmLabel>Week</label>
+          <div class="flex items-center gap-3">
+            <div class="text-sm font-medium">{{ displayWeekLabel() || 'Select a week' }}</div>
+            <div class="text-xs text-muted-foreground">(click a week below)</div>
+          </div>
+
+          @if (
+            sessionForm.weekNumber().touched() &&
+            sessionForm.weekNumber().invalid()
+          ) {
             <div class="text-xs text-destructive">
-              @for (error of sessionForm.weekStartDate().errors(); track error) {
+              @for (error of sessionForm.weekNumber().errors(); track error) {
                 <p>{{ error.message }}</p>
               }
             </div>
           }
+
+          <div class="mt-2 border border-border bg-background text-foreground rounded-md p-2">
+            <div class="flex items-center justify-between px-2 mb-2">
+              <button type="button" hlmBtn size="sm" variant="ghost" (click)="prevMonth()">
+                ◀
+              </button>
+              <div class="text-sm font-medium">
+                {{ currentMonth().toLocaleString(undefined, { month: 'long', year: 'numeric' }) }}
+              </div>
+              <button type="button" hlmBtn size="sm" variant="ghost" (click)="nextMonth()">
+                ▶
+              </button>
+            </div>
+
+            <div class="space-y-1">
+              @for (weekStart of monthWeeks(); track weekStart.getTime()) {
+                <div
+                  class="flex items-center justify-between rounded-md p-2 cursor-pointer transition-colors text-foreground hover:bg-accent hover:text-accent-foreground"
+                  [class.opacity-50]="isPastWeek(weekStart)"
+                  [class.bg-primary]="
+                    selectedWeekStart()?.toDateString() === weekStart.toDateString()
+                  "
+                  [class.text-primary-foreground]="
+                    selectedWeekStart()?.toDateString() === weekStart.toDateString()
+                  "
+                  (click)="selectWeek(weekStart)"
+                >
+                  <div class="text-sm">{{ getWeekYearAndNumber(weekStart).label }}</div>
+                  <div class="flex items-center gap-2">
+                    @if (isPlannedWeek(weekStart)) {
+                      <span
+                        class="h-2 w-2 rounded-full bg-emerald-500"
+                        title="Already planned"
+                      ></span>
+                    }
+                    @if (isPastWeek(weekStart)) {
+                      <div class="text-xs text-muted-foreground">Past</div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
         </div>
 
         <!-- Subject + Goals Pairs (Repeatable) -->
@@ -197,7 +240,7 @@
       </div>
 
       <hlm-dialog-footer class="shrink-0 mt-auto border-t border-border pt-4 px-4">
-        <button hlmBtn variant="outline" (click)="close()">Cancel</button>
+        <button hlmBtn variant="outline" (click)="dialogStateChange.emit('closed')">Cancel</button>
         <button
           hlmBtn
           type="submit"

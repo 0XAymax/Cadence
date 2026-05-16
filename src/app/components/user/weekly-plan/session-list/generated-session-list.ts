@@ -54,7 +54,7 @@ export class GeneratedSessionsListComponent {
   protected Trash2 = Trash2;
 
   readonly deleteSession = createMutation({
-    mutationFn: (sessionId: string) => this.sessionService.deleteSession(sessionId),
+    mutationFn: (sessionId: string) => this.sessionService.deleteGeneratedSession(sessionId),
     onSuccess: () => {
       toast.success('Session deleted', {
         description: 'The session has been removed from your study map.',
@@ -82,6 +82,18 @@ export class GeneratedSessionsListComponent {
       console.error('Failed to approve session :', error);
     },
   });
+
+  getWeekLabel(weekYear: number, weekNumber: number): string {
+    const jan4 = new Date(weekYear, 0, 4);
+    const day = jan4.getDay();
+    const diffToMonday = jan4.getDate() - day + (day === 0 ? -6 : 1);
+    const startOfFirstWeek = new Date(weekYear, 0, diffToMonday);
+
+    const weekStart = new Date(startOfFirstWeek);
+    weekStart.setDate(weekStart.getDate() + (weekNumber - 1) * 7);
+
+    return `Week of ${weekStart.toLocaleString(undefined, { month: 'long' })} ${weekStart.getDate()}, ${weekStart.getFullYear()}`;
+  }
 
   getBadgeVariant(status: string): any {
     switch (status) {

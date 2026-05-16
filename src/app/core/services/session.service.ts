@@ -66,6 +66,16 @@ export class SessionService {
     );
   }
 
+  public deleteGeneratedSession(sessionId: string) {
+    return this.http.delete(`${this.url}/delete/${sessionId}`).pipe(
+      tap(() => {
+        this.allGeneratedSessions.mutate((sessions) =>
+          sessions.filter((session) => session.weeklySession.id !== sessionId),
+        );
+      }),
+    );
+  }
+
   public updateSubSessionStatus(
     weeklySessionId: string,
     subSessionId: string,
@@ -145,6 +155,6 @@ export class SessionService {
   public loadMissingSubSession(sessionId: string) {
     return this.missedSubSessions.load(
       this.http.get<MissedSubSession[]>(`${this.url}/${sessionId}/missed`),
-    )
+    );
   }
 }

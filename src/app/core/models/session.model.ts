@@ -46,7 +46,8 @@ export interface SubjectGoalPair {
 
 export interface GenerateSessionModel {
   title: string;
-  weekStartDate: string; // YYYY-MM-DD
+  weekYear: number;
+  weekNumber: number;
   availabilityPlanID: string;
   usePriority: boolean;
   subjectGoalPairs: SubjectGoalPair[];
@@ -54,7 +55,8 @@ export interface GenerateSessionModel {
 
 export interface GenerateSessionRequest {
   title: string;
-  weekStartDate: string; // YYYY-MM-DD
+  weekYear: number;
+  weekNumber: number;
   availabilityPlanID: string;
   usePriority: boolean;
   goalsList: string[];
