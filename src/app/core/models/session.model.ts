@@ -1,26 +1,9 @@
-export interface AppSession {
-  id: string;
-  title: string;
-  date: string; // YYYY-MM-DD
-  startTime: string; // HH:mm
-  endTime: string; // HH:mm
-
-  // Relations
-  subjectId?: string;
-  subjectName?: string;
-  goalId?: string;
-  goalName?: string;
-  taskId?: string;
-  taskName?: string;
-
-  status: 'PLANNED' | 'IN_PROGRESS' | 'COMPLETED' | 'MISSED';
-  type: 'FOCUS' | 'REVIEW' | 'PRACTICE' | 'BREAK' | 'MANUAL' | 'GENERATED';
-}
 
 export interface CreateWeeklySessionResponse {
   id: string;
   title: string;
-  startTime: string;
+  weekNumber: number;
+  weekYear: number;
   sessionStatus: 'PENDING' | 'COMPLETED' | 'INCOMPLETED' | 'CLOSED';
 }
 
@@ -35,7 +18,8 @@ export interface CreateSubSessionResponse {
 }
 export interface CreateWeeklySessionRequest {
   title: string;
-  startTime: string;
+  weekYear: number;
+  weekNumber: number;
 }
 export interface CreateSubSessionRequest {
   dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
@@ -62,7 +46,8 @@ export interface SubjectGoalPair {
 
 export interface GenerateSessionModel {
   title: string;
-  weekStartDate: string; // YYYY-MM-DD
+  weekYear: number;
+  weekNumber: number;
   availabilityPlanID: string;
   usePriority: boolean;
   subjectGoalPairs: SubjectGoalPair[];
@@ -70,7 +55,8 @@ export interface GenerateSessionModel {
 
 export interface GenerateSessionRequest {
   title: string;
-  weekStartDate: string; // YYYY-MM-DD
+  weekYear: number;
+  weekNumber: number;
   availabilityPlanID: string;
   usePriority: boolean;
   goalsList: string[];
@@ -79,7 +65,7 @@ export interface GenerateSessionRequest {
 export interface ShareSessionRequest {
   sessionId: string;
   groupId: string;
-  permission : 'VIEW_ONLY' | 'EDIT';
+  permission: 'VIEW_ONLY' | 'EDIT';
 }
 
 export interface SharedSession {
@@ -92,3 +78,5 @@ export interface SharedSession {
   sharedByUserId: string;
   sharedByUsername: string;
 }
+
+export type MissedSubSession = Omit<CreateSubSessionResponse, 'status'>;

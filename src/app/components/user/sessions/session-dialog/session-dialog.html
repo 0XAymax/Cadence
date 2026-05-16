@@ -1,5 +1,17 @@
+<app-carry-over-dialog
+  [state]="carryOverDialogState()"
+  [missedItems]="carryOverItems()"
+  (dialogStateChange)="carryOverDialogState.set($event)"
+  (carryOverSelected)="onCarryOverSelected($event)"
+  (skip)="onCarryOverSkip()"
+/>
+
 <hlm-dialog [state]="state()" (stateChanged)="onStateChange($event)">
-  <hlm-dialog-content *hlmDialogPortal="let ctx" style="width: 500px; max-width: 500px">
+  <hlm-dialog-content
+    *hlmDialogPortal="let ctx"
+    class="flex flex-col max-h-[90vh]"
+    style="width: 500px; max-width: 500px"
+  >
     <hlm-dialog-header>
       <h2 hlmSheetTitle class="text-lg">{{ session() ? 'Update session' : 'Create session' }}</h2>
       <p hlmSheetDescription class="text-sm">
@@ -8,8 +20,8 @@
         }}
       </p>
     </hlm-dialog-header>
-    <form [formRoot]="sessionForm">
-      <div class="py-4 space-y-6">
+    <form [formRoot]="sessionForm" class="flex flex-col flex-1 min-h-0">
+      <div class="flex-1 overflow-y-auto py-4 space-y-6 px-1">
         <div class="space-y-2">
           <label hlmLabel>Title</label>
           <input
@@ -31,24 +43,65 @@
           }
         </div>
         <div class="space-y-2">
-          <label hlmLabel>Start Date</label>
-          <input
-            hlmInput
-            type="datetime-local"
-            [formField]="sessionForm.weeklySession.startTime"
-            id="start-time"
-            class="w-full"
-          />
+          <label hlmLabel>Week</label>
+          <div class="flex items-center gap-3">
+            <div class="text-sm font-medium">{{ displayWeekLabel() || 'Select a week' }}</div>
+            <div class="text-xs text-muted-foreground">(click a week below)</div>
+          </div>
+
           @if (
-            sessionForm.weeklySession.startTime().touched() &&
-            sessionForm.weeklySession.startTime().invalid()
+            sessionForm.weeklySession.weekNumber().touched() &&
+            sessionForm.weeklySession.weekNumber().invalid()
           ) {
             <div class="text-xs text-destructive">
-              @for (error of sessionForm.weeklySession.startTime().errors(); track error) {
+              @for (error of sessionForm.weeklySession.weekNumber().errors(); track error) {
                 <p>{{ error.message }}</p>
               }
             </div>
           }
+
+          <div class="mt-2 border border-border bg-background text-foreground rounded-md p-2">
+            <div class="flex items-center justify-between px-2 mb-2">
+              <button type="button" hlmBtn size="sm" variant="ghost" (click)="prevMonth()">
+                ◀
+              </button>
+              <div class="text-sm font-medium">
+                {{ currentMonth().toLocaleString(undefined, { month: 'long', year: 'numeric' }) }}
+              </div>
+              <button type="button" hlmBtn size="sm" variant="ghost" (click)="nextMonth()">
+                ▶
+              </button>
+            </div>
+
+            <div class="space-y-1">
+              @for (weekStart of monthWeeks(); track weekStart.getTime()) {
+                <div
+                  class="flex items-center justify-between rounded-md p-2 cursor-pointer transition-colors text-foreground hover:bg-accent hover:text-accent-foreground"
+                  [class.opacity-50]="isPastWeek(weekStart)"
+                  [class.bg-primary]="
+                    selectedWeekStart()?.toDateString() === weekStart.toDateString()
+                  "
+                  [class.text-primary-foreground]="
+                    selectedWeekStart()?.toDateString() === weekStart.toDateString()
+                  "
+                  (click)="selectWeek(weekStart)"
+                >
+                  <div class="text-sm">{{ getWeekYearAndNumber(weekStart).label }}</div>
+                  <div class="flex items-center gap-2">
+                    @if (isPlannedWeek(weekStart)) {
+                      <span
+                        class="h-2 w-2 rounded-full bg-emerald-500"
+                        title="Already planned"
+                      ></span>
+                    }
+                    @if (isPastWeek(weekStart)) {
+                      <div class="text-xs text-muted-foreground">Past</div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
         </div>
 
         <div class="space-y-4">
@@ -114,10 +167,10 @@
                       [formField]="subSession.startTime"
                       class="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
                     >
-                    <option value="">Select a time...</option>
-                    @for (t of timeSlots; track t) {
-                      <option [value]="t">{{ t }}</option>
-                    }
+                      <option value="">Select a time...</option>
+                      @for (t of timeSlots; track t) {
+                        <option [value]="t">{{ t }}</option>
+                      }
                     </select>
                   </div>
 
@@ -127,10 +180,10 @@
                       [formField]="subSession.endTime"
                       class="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
                     >
-                    <option value="">Select a time...</option>
-                    @for (t of timeSlots; track t) {
-                      <option [value]="t">{{ t }}</option>
-                    }
+                      <option value="">Select a time...</option>
+                      @for (t of timeSlots; track t) {
+                        <option [value]="t">{{ t }}</option>
+                      }
                     </select>
                   </div>
                 </div>
@@ -147,9 +200,22 @@
           >
             + Add Subsession
           </button>
+
+          @if (loadBalanceWarnings().length > 0) {
+            <div class="mt-4 space-y-2">
+              @for (warning of loadBalanceWarnings(); track $index) {
+                <div
+                  class="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-200"
+                >
+                  <span class="text-base leading-none">⚠️</span>
+                  <p class="flex-1">{{ formatWarning(warning) }}</p>
+                </div>
+              }
+            </div>
+          }
         </div>
       </div>
-      <hlm-dialog-footer>
+      <hlm-dialog-footer class="mt-4 pt-4 border-t">
         <button hlmBtn variant="outline" (click)="closeDialog(ctx)">Cancel</button>
         <button
           hlmBtn

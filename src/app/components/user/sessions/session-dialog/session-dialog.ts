@@ -1,9 +1,11 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { applyEach, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
 import {
   CreateSessionRequest,
   CreateSessionResponse,
   UpdateSessionRequest,
+  CreateWeeklySessionResponse,
+  CreateSubSessionRequest,
 } from '@app/core/models/session.model';
 import { SessionService } from '@app/core/services/session.service';
 import { SubjectService } from '@app/core/services/subject.service';
@@ -13,7 +15,13 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { toast } from 'ngx-sonner';
-
+import { CarryOverDialogComponent } from '../carry-over-dialog/carry-over-dialog';
+import { mapMissedToCarryOverItems } from '../carry-over-dialog/carry-over.utils';
+import {
+  getLoadBalanceWarnings,
+  formatWarningMessage,
+  type LoadBalanceWarning,
+} from './load-balancing.utils';
 
 @Component({
   selector: 'app-session-dialog',
@@ -25,11 +33,16 @@ import { toast } from 'ngx-sonner';
     HlmButtonImports,
     HlmLabelImports,
     HlmInputImports,
+    CarryOverDialogComponent,
   ],
 })
 export class SessionDialogComponent {
   private subjectService = inject(SubjectService);
   private sessionService = inject(SessionService);
+
+  carryOverDialogState = signal<'closed' | 'open'>('closed');
+  carryOverItems = signal(mapMissedToCarryOverItems([]));
+  sessionsLoaded = signal(false);
   readonly timeSlots = [
     '08:00',
     '08:30',
@@ -61,7 +74,8 @@ export class SessionDialogComponent {
   sessionModel = signal<CreateSessionRequest>({
     weeklySession: {
       title: '',
-      startTime: '',
+      weekYear: new Date().getFullYear(),
+      weekNumber: 0,
     },
     subSessions: [
       {
@@ -76,18 +90,43 @@ export class SessionDialogComponent {
   dialogStateChange = output<'closed' | 'open'>();
   subjects = this.subjectService.allSubjects.data;
 
+  loadBalanceWarnings = computed<LoadBalanceWarning[]>(() => {
+    const currentSubs = this.sessionModel().subSessions;
+    const previousSessions = this.sessionService.allSessions.data() || [];
+    const subjects = this.subjects() || [];
+    const currentSessionId = this.session()?.weeklySession.id;
+
+    return getLoadBalanceWarnings(currentSubs, previousSessions, subjects, currentSessionId);
+  });
+
+  formatWarning = formatWarningMessage;
+
   ngOnInit() {
     this.subjectService.loadAllSubjects().subscribe();
+    this.sessionService.loadAllSessions().subscribe(() => {
+      this.sessionsLoaded.set(true);
+    });
   }
 
   constructor() {
     effect(() => {
       const existing = this.session();
       if (existing) {
+        const ws = existing.weeklySession as CreateWeeklySessionResponse;
+        const { weekYear, weekNumber } = ws;
+        const weekStart = this.isoWeekStartFromYearAndNumber(weekYear, weekNumber);
+        const label = weekStart
+          ? `Week of ${weekStart.toLocaleString(undefined, { month: 'long' })} ${weekStart.getDate()}`
+          : '';
+        if (weekStart) {
+          this.selectedWeekStart.set(weekStart);
+          this.displayWeekLabel.set(label);
+        }
         this.sessionModel.set({
           weeklySession: {
             title: existing.weeklySession.title,
-            startTime: existing.weeklySession.startTime,
+            weekYear,
+            weekNumber,
           },
           subSessions: existing.subSessions.map((sub) => ({
             dayOfWeek: sub.dayOfWeek,
@@ -99,6 +138,50 @@ export class SessionDialogComponent {
         });
       }
     });
+
+    effect(() => {
+      const dialogState = this.state();
+      const loaded = this.sessionsLoaded();
+      if (dialogState === 'open' && !this.session() && loaded) {
+        this.checkForMissedSubSessions();
+      }
+    });
+  }
+
+  checkForMissedSubSessions() {
+    if (this.session()) return;
+
+    const allSessions = this.sessionService.allSessions.data();
+    if (allSessions.length === 0) return;
+
+    const sortedSessions = [...allSessions].sort((a, b) => {
+      const aWeek = a.weeklySession as CreateWeeklySessionResponse;
+      const bWeek = b.weeklySession as CreateWeeklySessionResponse;
+      if (aWeek.weekYear !== bWeek.weekYear) {
+        return bWeek.weekYear - aWeek.weekYear;
+      }
+      return bWeek.weekNumber - aWeek.weekNumber;
+    });
+
+    const lastSession = sortedSessions[0];
+    this.sessionService.loadMissingSubSession(lastSession.weeklySession.id).subscribe(() => {
+      const missed = this.sessionService.missedSubSessions.data();
+      if (missed.length > 0) {
+        this.carryOverItems.set(mapMissedToCarryOverItems(missed));
+        this.carryOverDialogState.set('open');
+      }
+    });
+  }
+
+  onCarryOverSelected(subSessions: CreateSubSessionRequest[]) {
+    this.sessionModel.update((model) => ({
+      ...model,
+      subSessions,
+    }));
+  }
+
+  onCarryOverSkip() {
+    // Dialog closes, form opens empty
   }
 
   createSessionMutation = createMutation({
@@ -107,8 +190,15 @@ export class SessionDialogComponent {
       toast.success('Session Created Successfully');
       this.dialogStateChange.emit('closed');
     },
-    onError: (error) => {
-      toast.error('Session Creation failed', { description: error });
+    onError: (error: unknown) => {
+      const status = (error as { status?: number })?.status;
+      if (status === 409) {
+        toast.error('A session already exists for the selected week.');
+      } else if (status === 400) {
+        toast.error('Cannot create a session for a past week.');
+      } else {
+        toast.error('Session Creation failed', { description: String(error) });
+      }
     },
   });
 
@@ -119,15 +209,23 @@ export class SessionDialogComponent {
       toast.success('Session Updated Successfully');
       this.dialogStateChange.emit('closed');
     },
-    onError: (error) => {
-      toast.error('Session Update failed', { description: error });
+    onError: (error: unknown) => {
+      const status = (error as { status?: number })?.status;
+      if (status === 409) {
+        toast.error('A session already exists for the selected week.');
+      } else if (status === 400) {
+        toast.error('Cannot select a past week.');
+      } else {
+        toast.error('Session Update failed', { description: String(error) });
+      }
     },
   });
 
   sessionForm = form(
     this.sessionModel,
     (schema) => {
-      required(schema.weeklySession.startTime, { message: 'Week session start time is required' });
+      required(schema.weeklySession.weekYear, { message: 'Week is required' });
+      required(schema.weeklySession.weekNumber, { message: 'Week is required' });
       required(schema.weeklySession.title, { message: 'Week session title is required' });
       minLength(schema.subSessions, 1, { message: 'At least one sub session is required' });
       applyEach(schema.subSessions, (subSession) => {
@@ -159,6 +257,101 @@ export class SessionDialogComponent {
     },
   );
 
+  currentMonth = signal(new Date());
+  selectedWeekStart = signal<Date | null>(null);
+  displayWeekLabel = signal('');
+
+  plannedWeeks = this.sessionService.allSessions.data;
+
+  monthWeeks = computed(() => {
+    const month = this.currentMonth();
+    const year = month.getFullYear();
+    const m = month.getMonth();
+    const firstOfMonth = new Date(year, m, 1);
+
+    // get monday of the week that contains the 1st
+    const day = firstOfMonth.getDay();
+    const diffToMonday = (day === 0 ? -6 : 1) - day;
+    const start = new Date(firstOfMonth);
+    start.setDate(firstOfMonth.getDate() + diffToMonday);
+
+    const weeks: Date[] = [];
+    let cursor = new Date(start);
+    const nextMonth = m === 11 ? 0 : m + 1;
+
+    while (weeks.length < 8) {
+      if (weeks.length > 0 && cursor.getMonth() === nextMonth) {
+        break;
+      }
+      weeks.push(new Date(cursor));
+      cursor.setDate(cursor.getDate() + 7);
+    }
+
+    return weeks;
+  });
+
+  getWeekYearAndNumber(date: Date) {
+    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    const day = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - day);
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+    const weekNo = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
+    const weekYear = d.getUTCFullYear();
+
+    const local = new Date(date);
+    const ld = local.getDay() || 7;
+    const monday = new Date(local);
+    monday.setDate(local.getDate() - (ld - 1));
+
+    const label = `Week of ${monday.toLocaleString(undefined, { month: 'long' })} ${monday.getDate()}`;
+
+    return { weekYear, weekNumber: weekNo, weekStart: monday, label };
+  }
+
+  isPastWeek(weekStart: Date) {
+    const today = new Date();
+    const td = today.getDay() || 7;
+    const currentMonday = new Date(today);
+    currentMonday.setDate(today.getDate() - (td - 1));
+    return weekStart.setHours(0, 0, 0, 0) < currentMonday.setHours(0, 0, 0, 0);
+  }
+
+  isPlannedWeek(weekStart: Date) {
+    const info = this.getWeekYearAndNumber(weekStart);
+    const planned = this.sessionService.allSessions.data();
+    return planned.some((s) => {
+      const ws = s.weeklySession as CreateWeeklySessionResponse;
+      return ws.weekYear === info.weekYear && ws.weekNumber === info.weekNumber;
+    });
+  }
+
+  prevMonth() {
+    const c = new Date(this.currentMonth());
+    c.setMonth(c.getMonth() - 1);
+    this.currentMonth.set(c);
+  }
+
+  nextMonth() {
+    const c = new Date(this.currentMonth());
+    c.setMonth(c.getMonth() + 1);
+    this.currentMonth.set(c);
+  }
+
+  selectWeek(weekStart: Date) {
+    if (this.isPastWeek(weekStart)) return;
+    const info = this.getWeekYearAndNumber(weekStart);
+    this.sessionModel.update((m) => ({
+      ...m,
+      weeklySession: {
+        ...m.weeklySession,
+        weekYear: info.weekYear,
+        weekNumber: info.weekNumber,
+      },
+    }));
+    this.selectedWeekStart.set(info.weekStart);
+    this.displayWeekLabel.set(info.label);
+  }
+
   addSubSession() {
     this.sessionModel.update((model) => ({
       ...model,
@@ -188,8 +381,20 @@ export class SessionDialogComponent {
     this.dialogStateChange.emit(event);
   }
 
-  closeDialog(ctx: any) {
+  closeDialog(ctx: { close: () => void }) {
     this.dialogStateChange.emit('closed');
     ctx.close();
+  }
+
+  // compute monday date for an ISO week year+number
+  isoWeekStartFromYearAndNumber(weekYear: number, weekNumber: number): Date | null {
+    if (!weekYear || !weekNumber) return null;
+    const jan4 = new Date(Date.UTC(weekYear, 0, 4));
+    const day = jan4.getUTCDay() || 7;
+    const mondayOfWeek1 = new Date(jan4);
+    mondayOfWeek1.setUTCDate(jan4.getUTCDate() - (day - 1));
+    const target = new Date(mondayOfWeek1);
+    target.setUTCDate(mondayOfWeek1.getUTCDate() + (weekNumber - 1) * 7);
+    return new Date(target.getUTCFullYear(), target.getUTCMonth(), target.getUTCDate());
   }
 }

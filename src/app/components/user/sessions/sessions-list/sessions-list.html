@@ -16,7 +16,13 @@
       </div>
     } @else {
       @for (sessionRes of sessions(); track sessionRes.weeklySession.id) {
-        <div hlmCard class="p-4 flex flex-col gap-4">
+        <div
+          hlmCard
+          class="p-4 flex flex-col gap-4 shadow-sm transition-all"
+          [class.cursor-pointer]="isReflectable(sessionRes.weeklySession.sessionStatus)"
+          [class.hover:border-primary]="isReflectable(sessionRes.weeklySession.sessionStatus)"
+          (click)="onCardClick($event, sessionRes.weeklySession)"
+        >
           <!-- Parent Weekly Session Header -->
           <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div class="flex items-start gap-4 flex-1 w-full">
@@ -31,11 +37,11 @@
                     {{ sessionRes.weeklySession.title }}
                   </h4>
                   <span
-                    hlmBadge
-                    [variant]="getBadgeVariant(sessionRes.weeklySession.sessionStatus)"
-                    class="text-[10px] px-2 py-0 h-5"
+                    class="text-[10px] px-2 py-0.5 rounded-full border font-medium uppercase tracking-wider {{
+                      getStatusClasses(sessionRes.weeklySession.sessionStatus)
+                    }}"
                   >
-                    {{ sessionRes.weeklySession.sessionStatus }}
+                    {{ getStatusDisplay(sessionRes.weeklySession.sessionStatus) }}
                   </span>
                 </div>
                 <div
@@ -43,9 +49,12 @@
                 >
                   <div class="flex items-center gap-1.5">
                     <lucide-angular [img]="Clock" class="h-3.5 w-3.5"></lucide-angular>
-                    <span
-                      >Starts: {{ sessionRes.weeklySession.startTime | date: 'mediumDate' }}</span
-                    >
+                    <span>{{
+                      getWeekLabel(
+                        sessionRes.weeklySession.weekYear,
+                        sessionRes.weeklySession.weekNumber
+                      )
+                    }}</span>
                   </div>
                 </div>
               </div>

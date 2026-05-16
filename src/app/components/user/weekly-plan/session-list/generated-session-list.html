@@ -43,9 +43,12 @@
                 >
                   <div class="flex items-center gap-1.5">
                     <lucide-angular [img]="Clock" class="h-3.5 w-3.5"></lucide-angular>
-                    <span
-                      >Starts: {{ sessionRes.weeklySession.startTime | date: 'mediumDate' }}</span
-                    >
+                   <span>{{
+                      getWeekLabel(
+                        sessionRes.weeklySession.weekYear,
+                        sessionRes.weeklySession.weekNumber
+                      )
+                    }}</span>
                   </div>
                 </div>
               </div>
