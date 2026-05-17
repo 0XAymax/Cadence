@@ -1,7 +1,5 @@
 @if (isGroupLoading()) {
-  <div class="flex items-center justify-center min-h-[50vh]">
-    <p class="text-muted-foreground">Loading group...</p>
-  </div>
+  <app-loading-spinner [isLoading]="true"></app-loading-spinner>
 } @else {
   <div class="max-w-4xl mx-auto space-y-6 pt-4 pb-12">
     <!-- Header -->
@@ -48,9 +46,7 @@
         </div>
 
         @if (isSharedSessionsLoading()) {
-          <div class="flex items-center justify-center min-h-[30vh]">
-            <p class="text-muted-foreground">Loading shared sessions...</p>
-          </div>
+          <app-loading-spinner [isLoading]="true"></app-loading-spinner>
         } @else if(groupService.currentUserId(); as userId) {
         <div class="space-y-4">
           @for (session of sharedSessions(); track session.sessionId) {
@@ -71,9 +67,7 @@
 
       <!-- Members Tab -->
       @if (isMembersLoading()) {
-        <div class="flex items-center justify-center min-h-[50vh]">
-          <p class="text-muted-foreground">Loading members...</p>
-        </div>
+        <app-loading-spinner [isLoading]="true"></app-loading-spinner>
       } @else if (groupService.currentUserId(); as userId){
         <div hlmTabsContent="members">
           <app-group-members-tab

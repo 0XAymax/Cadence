@@ -16,6 +16,7 @@ import { extractErrorMessage } from '@app/core/utils/error.util';
 import { AlertService } from '@app/components/shared/alert/alert.service';
 import { SessionService } from '@app/core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LoadingSpinnerComponent } from "@app/components/shared/loading-spinner/loading-spinner.component";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,7 +32,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     GroupMembersTabComponent,
     GroupChatTabComponent,
     GroupSettingsTabComponent,
-  ],
+    LoadingSpinnerComponent
+],
   templateUrl: './group-detail.html',
 })
 export class GroupDetailComponent {

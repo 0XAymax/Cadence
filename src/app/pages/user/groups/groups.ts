@@ -10,6 +10,7 @@ import { toast } from 'ngx-sonner';
 import { extractErrorMessage } from '@app/core/utils/error.util';
 import { GroupDataTable } from "@app/components/user/groups/group-table/group-table";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LoadingSpinnerComponent } from "@app/components/shared/loading-spinner/loading-spinner.component";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,7 +22,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     HlmButtonImports,
     BrnDialogImports,
     HlmTabsImports,
-    GroupDataTable
+    GroupDataTable,
+    LoadingSpinnerComponent
 ],
   templateUrl: './groups.html',
 })
