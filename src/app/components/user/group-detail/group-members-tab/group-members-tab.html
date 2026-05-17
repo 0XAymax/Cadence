@@ -16,7 +16,13 @@
           </div>
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2">
-              <p class="font-medium truncate">{{ member.firstName }} {{ member.lastName }}</p>
+              <p class="font-medium truncate">
+                @if (member.userId === currentUserId()) {
+                  You
+                } @else {
+                  {{ member.firstName }} {{ member.lastName }}
+                }
+              </p>
               <span
                 hlmBadge
                 [variant]="member.role === 'ADMIN' ? 'default' : 'secondary'"

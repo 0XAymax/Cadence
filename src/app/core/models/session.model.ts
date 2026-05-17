@@ -69,6 +69,7 @@ export interface ShareSessionRequest {
 }
 
 export interface SharedSession {
+  sharedSessionId: string;
   sessionId: string;
   sessionTitle: string;
   groupId: string;

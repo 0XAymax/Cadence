@@ -146,6 +146,13 @@ export class SessionService {
     );
   }
 
+  public forkSession(sharedSessionId: string) {
+    return this.http.post<CreateSessionResponse>(
+      `${this.url}/shared-sessions/${sharedSessionId}/fork`,
+      {},
+    );
+  }
+
   public loadSharedSessions(groupId: string) {
     return this.sharedSessions.load(
       this.http.get<SharedSession[]>(`${this.url}/shared/${groupId}`),

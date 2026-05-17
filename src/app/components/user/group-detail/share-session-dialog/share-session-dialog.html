@@ -26,25 +26,6 @@
             </div>
           }
         </div>
-        <div class="space-y-2">
-          <label hlmLabel>Permission</label>
-          <select
-            hlmInput
-            [formField]="shareSessionForm.permission"
-            class="w-full h-10 px-3 cursor-pointer"
-          >
-            <option value="">-- Select permission level --</option>
-            <option value="VIEW_ONLY">View Only</option>
-            <option value="EDIT">Can Edit</option>
-          </select>
-          @if (shareSessionForm.permission().touched() && shareSessionForm.permission().invalid()) {
-            <div class="text-xs text-destructive">
-              @for (error of shareSessionForm.permission().errors(); track error) {
-                <p>{{ error.message }}</p>
-              }
-            </div>
-          }
-        </div>
       </div>
 
       <hlm-dialog-footer>

@@ -1,16 +1,26 @@
-import { Component, inject, input , ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { GroupService } from '@app/core/services/group.service';
 import { SharedSession } from '@app/core/models/session.model';
-import { Eye, LucideAngularModule, MoreVertical, Lock, Trash } from 'lucide-angular';
+import {
+  Eye,
+  LucideAngularModule,
+  MoreVertical,
+  Lock,
+  Trash,
+  GitFork,
+  Loader2,
+} from 'lucide-angular';
 import { HlmDropdownMenuImports } from '@spartan-ng/helm/dropdown-menu';
 import { createMutation } from '@app/core/utils/mutation.helper';
 import { SessionService } from '@app/core/services/session.service';
 import { toast } from 'ngx-sonner';
 import { AlertService } from '@app/components/shared/alert/alert.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,7 +33,7 @@ import { AlertService } from '@app/components/shared/alert/alert.service';
     LucideAngularModule,
     HlmButtonImports,
     DatePipe,
-    HlmDropdownMenuImports
+    HlmDropdownMenuImports,
   ],
   templateUrl: './group-feed-card.html',
 })
@@ -38,9 +48,34 @@ export class GroupFeedCardComponent {
   protected Eye = Eye;
   protected Lock = Lock;
   protected Trash = Trash;
+  protected GitFork = GitFork;
+  protected Loader2 = Loader2;
+
+  forkSessionMutation = createMutation({
+    mutationFn: () =>
+      this.sessionService.forkSession(this.session().sharedSessionId).pipe(
+        catchError((err: HttpErrorResponse) => {
+          if (err.status === 409) {
+            return throwError(() => new Error('You already have a session for this week'));
+          }
+          return throwError(() => err);
+        }),
+      ),
+    onSuccess: () => {
+      toast.success('Session added to your plan');
+    },
+    onError: (err) => {
+      toast.error('Failed to fork session', { description: err });
+    },
+  });
+
+  onForkSession() {
+    this.forkSessionMutation.mutate({});
+  }
 
   unshareSessionMutation = createMutation({
-    mutationFn: () => this.sessionService.unshareSession(this.session().sessionId, this.session().groupId),
+    mutationFn: () =>
+      this.sessionService.unshareSession(this.session().sessionId, this.session().groupId),
     onSuccess: () => {
       toast.success('Session unshared successfully', {
         description: 'The session has been removed from the group feed.',
@@ -49,7 +84,7 @@ export class GroupFeedCardComponent {
     onError: (err) => {
       toast.error('Failed to unshare session', { description: err });
     },
-  }); 
+  });
 
   onUnshareSession() {
     this.alertService.show({

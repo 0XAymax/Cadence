@@ -10,7 +10,11 @@
 
         <div class="min-w-0">
           <p class="text-sm font-semibold leading-4.5">
-            {{ session().sharedByUsername }}
+            @if( userId() === session().sharedByUserId) {
+              You
+            } @else {
+              {{ session().sharedByUsername }}
+            }
             <span class="text-muted-foreground font-normal">shared a session</span>
           </p>
           <p class="text-xs text-muted-foreground">
@@ -37,10 +41,28 @@
         <div class="min-w-0 space-y-0.5">
           <h4 class="truncate text-sm font-semibold leading-5">{{ session().sessionTitle }}</h4>
           <p class="text-xs text-muted-foreground">
-            {{ session().permission === 'EDIT' ? 'Can Edit' : 'View Only' }}
+            {{ 'View Only' }}
           </p>
         </div>
-        <span hlmBadge variant="secondary" class="shrink-0">{{ session().permission }}</span>
+        @if (userId() != session().sharedByUserId) {
+          <div class="flex items-center gap-2 shrink-0">
+            <button
+              hlmBtn
+              size="sm"
+              variant="outline"
+              class="h-7 gap-1.5 px-2 text-xs"
+              [disabled]="forkSessionMutation.isPending() || forkSessionMutation.isSuccess()"
+              (click)="onForkSession()"
+            >
+              @if (forkSessionMutation.isPending()) {
+                <lucide-angular [img]="Loader2" class="h-3 w-3 animate-spin"></lucide-angular>
+              } @else {
+                <lucide-angular [img]="GitFork" class="h-3 w-3"></lucide-angular>
+              }
+              Fork
+            </button>
+          </div>
+        }
       </div>
     </div>
   </div>
@@ -51,14 +73,9 @@
         <lucide-angular [img]="Eye" class="h-4 w-4"></lucide-angular>
         View Session
       </button>
-      @if (userId() === session().sharedByUserId) {
-        <hlm-dropdown-menu-separator></hlm-dropdown-menu-separator>
-        <button hlmDropdownMenuItem class="gap-2 whitespace-nowrap">
-          <lucide-angular [img]="Lock" class="h-4 w-4"></lucide-angular>
-          {{ session().permission === 'VIEW_ONLY' ? 'Can Edit' : 'View Only' }}
-        </button>
-      }
-      @if (userId() === session().sharedByUserId || userRole() === 'ADMIN' || userRole() === 'OWNER') {
+      @if (
+        userId() === session().sharedByUserId || userRole() === 'ADMIN' || userRole() === 'OWNER'
+      ) {
         <hlm-dropdown-menu-separator></hlm-dropdown-menu-separator>
         <button hlmDropdownMenuItem class="gap-2 whitespace-nowrap" (click)="onUnshareSession()">
           <lucide-angular [img]="Trash" class="h-4 w-4"></lucide-angular>

@@ -54,7 +54,6 @@ export class ShareSessionDialogComponent {
     this.shareSessionModel,
     (schema) => {
       required(schema.sessionId, { message: 'Session selection is required' });
-      required(schema.permission, { message: 'Permission selection is required' });
     },
     {
       submission: {
