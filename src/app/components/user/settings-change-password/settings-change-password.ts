@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, computed } from '@angular/core';
+import { Component, inject, input, output, signal, computed , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -18,6 +18,7 @@ import { User } from '@app/core/models/user.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-settings-change-password',
   imports: [
     CommonModule,

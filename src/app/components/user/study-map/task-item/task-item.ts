@@ -1,4 +1,4 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import { Component, computed, inject, input, signal , ChangeDetectionStrategy } from '@angular/core';
 import { NgIconsModule } from '@ng-icons/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
@@ -13,6 +13,7 @@ import { GoalService } from '@app/core/services/goal.service';
 import { AlertService } from '@app/components/shared/alert/alert.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-item',
   standalone: true,
   imports: [

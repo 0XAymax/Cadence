@@ -3,8 +3,7 @@ import {
   input,
   output,
   signal,
-  inject,
-} from '@angular/core';
+  inject, ChangeDetectionStrategy } from '@angular/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import {
   LucideAngularModule,
@@ -29,6 +28,7 @@ import { GoalFormDialogComponent } from "../goal-form-dialog/goal-form-dialog";
 import { TaskFormDialogComponent } from "../task-form-dialog/task-form-dialog";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-goal-item',
   standalone: true,
   imports: [

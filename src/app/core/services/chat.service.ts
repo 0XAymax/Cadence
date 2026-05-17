@@ -39,17 +39,15 @@ export class ChatService implements OnDestroy {
 
   loadChatHistory(groupId: string): Observable<GroupMessageResponse[]> {
     const url = `${this.apiUrl}/${groupId}/messages`;
-    const request$ = this.http.get<GroupMessageResponse[]>(url);
-
-    request$.subscribe({
-      next: (history) => {
-        // Replace current state with fetched history
-        this.messagesSubject.next(history);
-      },
-      error: (err) => console.error('Failed to load history', err),
-    });
-
-    return request$;
+    return this.http.get<GroupMessageResponse[]>(url).pipe(
+      tap({
+        next: (history) => {
+          // Replace current state with fetched history
+          this.messagesSubject.next(history);
+        },
+        error: (err) => console.error('Failed to load history', err),
+      })
+    );
   }
 
   connectAndSubscribe(groupId: string): void {

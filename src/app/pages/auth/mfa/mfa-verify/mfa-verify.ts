@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { NgIconsModule } from '@ng-icons/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -12,6 +12,7 @@ import { HlmInputOtpImports } from '@spartan-ng/helm/input-otp';
 import { BrnInputOtpImports } from '@spartan-ng/brain/input-otp';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-mfa-verify',
   standalone: true,
   imports: [

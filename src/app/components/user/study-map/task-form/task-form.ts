@@ -1,4 +1,4 @@
-import { Component, inject, input, signal } from '@angular/core';
+import { Component, inject, input, signal , ChangeDetectionStrategy } from '@angular/core';
 import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { HlmInputImports } from '@spartan-ng/helm/input';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
@@ -9,6 +9,7 @@ import { toast } from 'ngx-sonner';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-form',
   standalone: true,
   imports: [HlmLabelImports, HlmInputImports, FormRoot, FormField, HlmButtonImports],

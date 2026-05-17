@@ -8,6 +8,8 @@ import { errorInterceptor } from '@app/core/interceptors/error.interceptor';
 import { loadingInterceptor } from '@app/core/interceptors/loading.interceptor';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { cacheInterceptor } from '@app/core/interceptors/cache.interceptor';
+import { retryInterceptor } from '@app/core/interceptors/retry.interceptor';
+import { cancelInterceptor } from '@app/core/interceptors/cancel.interceptor';
 import { provideIcons } from '@ng-icons/core';
 import {
   lucideServerCrash,
@@ -51,7 +53,7 @@ export const appConfig: ApplicationConfig = {
       mobileBreakpoint: '768px',
     }),
     provideHttpClient(
-      withInterceptors([cacheInterceptor, authInterceptor, loadingInterceptor, errorInterceptor]),
+      withInterceptors([cancelInterceptor, cacheInterceptor, retryInterceptor, authInterceptor, loadingInterceptor, errorInterceptor]),
     ),
     provideIcons({
       serverCrash: lucideServerCrash,

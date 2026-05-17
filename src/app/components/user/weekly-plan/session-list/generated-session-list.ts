@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CreateSessionResponse } from '@app/core/models/session.model';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -24,6 +24,7 @@ import { createMutation } from '@app/core/utils/mutation.helper';
 import { toast } from 'ngx-sonner';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-generated-sessions-list',
   standalone: true,
   imports: [

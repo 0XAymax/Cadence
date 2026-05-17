@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CreateSessionResponse, CreateSubSessionResponse } from '@app/core/models/session.model';
 import { getWeekDays, getTimeSlots, computeBlockStyles, getSubjectColor } from './calendar.utils';
@@ -8,6 +8,7 @@ import { HlmHoverCardImports } from '@spartan-ng/helm/hover-card';
 import { BrnHoverCardImports } from '@spartan-ng/brain/hover-card';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sessions-calendar',
   standalone: true,
   imports: [

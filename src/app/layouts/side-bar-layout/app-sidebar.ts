@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import {
   lucideBookOpen,
@@ -20,6 +20,7 @@ import { LogoComponent } from '../../components/logo/Logo';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sidebar',
   imports: [HlmSidebarImports, NgIcon, HlmIcon, LogoComponent, RouterLink, RouterLinkActive],
   template: `

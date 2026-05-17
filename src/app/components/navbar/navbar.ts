@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { LogoComponent } from "../logo/Logo";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-navbar',
   imports: [RouterLink, ...HlmButtonImports, LogoComponent],
   templateUrl: './navbar.html',

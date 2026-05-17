@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HlmSeparatorImports } from '@spartan-ng/helm/separator';
 import { LogoComponent } from "../logo/Logo";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-footer',
   imports: [RouterLink, ...HlmSeparatorImports, LogoComponent],
   templateUrl: './footer.html',

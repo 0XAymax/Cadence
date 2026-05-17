@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, computed } from '@angular/core';
+import { Component, inject, OnInit, computed , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SessionsHeaderComponent } from '@app/components/user/sessions/sessions-header/sessions-header';
 import { SessionsListComponent } from '@app/components/user/sessions/sessions-list/sessions-list';
@@ -6,6 +6,7 @@ import { SessionService } from '@app/core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sessions',
   standalone: true,
   imports: [

@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
@@ -14,6 +14,7 @@ import { toast } from 'ngx-sonner';
 import { extractErrorMessage } from '@app/core/utils/error.util';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-create-group-dialog',
   standalone: true,
   imports: [

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { AppSidebar } from './app-sidebar';
 import { HlmSidebarImports } from '@spartan-ng/helm/sidebar';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AppSidebar, HlmSidebarImports, RouterOutlet],
   selector: 'app-side-bar-layout',
   template: `<app-sidebar>

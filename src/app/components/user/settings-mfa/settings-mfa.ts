@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal, viewChild } from '@angular/core';
+import { Component, inject, input, output, signal, viewChild , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -15,6 +15,7 @@ import { toast } from 'ngx-sonner';
 import { User } from '@app/core/models/user.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-settings-mfa',
   imports: [
     CommonModule,

@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { NgIconsModule } from '@ng-icons/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-upcoming-deadlines',
   imports: [...HlmCardImports, NgIconsModule],
   templateUrl: './upcoming-deadlines.html',

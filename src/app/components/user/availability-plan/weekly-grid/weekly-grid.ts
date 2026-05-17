@@ -5,11 +5,11 @@ import {
   input,
   effect,
   inject,
-  ChangeDetectorRef,
-} from '@angular/core';
+  ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { SlotRange } from '@app/core/models/availability.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-weekly-grid',
   standalone: true,
   templateUrl: './weekly-grid.html',

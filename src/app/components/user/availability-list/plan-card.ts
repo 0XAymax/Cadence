@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input , ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
@@ -6,6 +6,7 @@ import { DatePipe } from '@angular/common';
 import { Plan } from '@app/core/models/availability.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-plan-card',
   standalone: true,
   imports: [RouterLink, HlmCardImports, HlmBadgeImports, DatePipe],

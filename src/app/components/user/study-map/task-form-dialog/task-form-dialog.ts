@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { CreateGoalTask, Task } from '@app/core/models/goal.model';
 import { GoalService } from '@app/core/services/goal.service';
@@ -10,6 +10,7 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { toast } from 'ngx-sonner';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-task-form-dialog',
   templateUrl: './task-form-dialog.html',
   imports: [

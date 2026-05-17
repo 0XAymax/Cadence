@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { SettingsProfileComponent } from '@app/components/user/settings-profile/settings-profile';
 import { SettingsMfaComponent } from '@app/components/user/settings-mfa/settings-mfa';
@@ -8,6 +8,7 @@ import { SettingsService } from '@app/core/services/settings.service';
 import { User } from '@app/core/models/user.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-settings',
   imports: [SettingsProfileComponent, SettingsMfaComponent, SettingsChangePasswordComponent, HlmSkeletonImports],
   templateUrl: './settings.html',

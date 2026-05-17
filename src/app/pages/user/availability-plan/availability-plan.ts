@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, OnInit } from '@angular/core';
+import { Component, inject, signal, effect, OnInit , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -11,6 +11,7 @@ import { CreateAvailabilityPlan, SlotRange } from '@app/core/models/availability
 import { AvailabilityPlanService } from '@app/core/services/availability-plan.service';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-availability-plan',
   templateUrl: './availability-plan.html',
   standalone: true,

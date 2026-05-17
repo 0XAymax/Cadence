@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { NgIconsModule } from '@ng-icons/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -15,6 +15,7 @@ import { firstValueFrom } from 'rxjs';
 import { toast } from 'ngx-sonner';
 import { extractErrorMessage } from '@app/core/utils/error.util';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sign-in',
   imports: [
     NgIconsModule,

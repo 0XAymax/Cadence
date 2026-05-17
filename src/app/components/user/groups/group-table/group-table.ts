@@ -8,8 +8,7 @@ import {
   output,
   signal,
   TemplateRef,
-  viewChild,
-} from '@angular/core';
+  viewChild, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { AlertService } from '@app/components/shared/alert/alert.service';
@@ -38,6 +37,7 @@ import {
 import { LucideAngularModule, SquareArrowOutUpRight, Ellipsis } from 'lucide-angular';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-group-data-table',
   imports: [
     FlexRenderDirective,

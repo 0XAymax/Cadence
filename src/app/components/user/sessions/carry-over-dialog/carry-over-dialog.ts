@@ -1,4 +1,4 @@
-import { Component, effect, input, output, signal } from '@angular/core';
+import { Component, effect, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { TitleCasePipe } from '@angular/common';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -7,6 +7,7 @@ import { CarryOverItem, carryOverItemsToSubSessionRequests } from './carry-over.
 import { CreateSubSessionRequest } from '@app/core/models/session.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-carry-over-dialog',
   templateUrl: './carry-over-dialog.html',
   imports: [HlmDialogImports, HlmButtonImports, HlmCheckboxImports, TitleCasePipe],

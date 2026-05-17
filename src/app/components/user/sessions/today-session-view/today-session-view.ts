@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SessionService } from '@app/core/services/session.service';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -6,6 +6,7 @@ import { LucideAngularModule, Clock, BookOpen, Coffee } from 'lucide-angular';
 import { CreateSubSessionResponse } from '@app/core/models/session.model';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-today-session-view',
   standalone: true,
   imports: [CommonModule, HlmCardImports, LucideAngularModule],

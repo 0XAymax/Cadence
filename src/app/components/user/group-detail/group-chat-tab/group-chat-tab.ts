@@ -6,8 +6,7 @@ import {
   ViewChild,
   ElementRef,
   OnInit,
-  OnDestroy,
-} from '@angular/core';
+  OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -18,6 +17,7 @@ import { provideIcons } from '@ng-icons/core';
 import { ChatService } from '@app/core/services/chat.service'; // adjust path if needed
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-group-chat-tab',
   standalone: true,
   imports: [CommonModule, FormsModule, HlmButtonImports, HlmInputImports, HlmIconImports, DatePipe],

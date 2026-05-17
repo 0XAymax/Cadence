@@ -1,7 +1,8 @@
-import { Component, effect, input, output } from '@angular/core';
+import { Component, effect, input, output , ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-plan-header',
   standalone: true,
   imports: [FormsModule],

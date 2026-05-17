@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { form, FormField, FormRoot, min, required } from '@angular/forms/signals';
 import { CreateGoalRequest, Goal, UpdateGoalRequest } from '@app/core/models/goal.model';
 import { GoalService } from '@app/core/services/goal.service';
@@ -10,6 +10,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-goal-form-dialog',
   standalone: true,
   imports: [

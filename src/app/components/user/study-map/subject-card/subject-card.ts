@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { LucideAngularModule, ChevronDown, ChevronRight, MoreVertical, Plus } from 'lucide-angular';
@@ -16,6 +16,7 @@ import { GoalFormDialogComponent } from "../goal-form-dialog/goal-form-dialog";
 import { SubjectFormDialogComponent } from "../subject-form-dialog/subject-form-dialog";
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-subject-card',
   standalone: true,
   imports: [

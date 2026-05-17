@@ -6,8 +6,7 @@ import {
   inject,
   signal,
   computed,
-  DestroyRef,
-} from '@angular/core';
+  DestroyRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { applyEach, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
@@ -31,6 +30,7 @@ import { toast } from 'ngx-sonner';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-generate-week-dialog',
   standalone: true,
   imports: [

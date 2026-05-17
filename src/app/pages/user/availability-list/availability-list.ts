@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmSkeletonImports } from '@spartan-ng/helm/skeleton';
@@ -8,6 +8,7 @@ import { AvailabilityPlanService } from '@app/core/services/availability-plan.se
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-availability-list',
   standalone: true,
   imports: [RouterLink, HlmButtonImports, HlmSkeletonImports, PlanCardComponent],

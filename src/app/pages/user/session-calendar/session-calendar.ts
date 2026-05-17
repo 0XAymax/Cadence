@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '@app/core/services/session.service';
@@ -6,6 +6,7 @@ import { SessionsCalendarComponent } from '@app/components/user/sessions/session
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-session-calendar-page',
   templateUrl: './session-calendar.html',
   imports: [CommonModule, SessionsCalendarComponent],

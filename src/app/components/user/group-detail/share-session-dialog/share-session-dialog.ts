@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HlmDialogImports } from '@spartan-ng/helm/dialog';
@@ -14,6 +14,7 @@ import { ShareSessionRequest } from '@app/core/models/session.model';
 import { toast } from 'ngx-sonner';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-share-session-dialog',
   standalone: true,
   imports: [

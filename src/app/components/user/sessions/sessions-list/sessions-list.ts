@@ -1,4 +1,4 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CreateSessionResponse, CreateSubSessionResponse } from '@app/core/models/session.model';
 import { HlmCardImports } from '@spartan-ng/helm/card';
@@ -27,6 +27,7 @@ import { SessionDialogComponent } from '../session-dialog/session-dialog';
 import { Router } from '@angular/router';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-sessions-list',
   standalone: true,
   imports: [

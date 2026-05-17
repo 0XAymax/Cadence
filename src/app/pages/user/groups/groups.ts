@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GroupService } from '@app/core/services/group.service';
 import { CreateGroupDialogComponent } from '@app/components/user/groups/create-group-dialog/create-group-dialog';
@@ -12,6 +12,7 @@ import { GroupDataTable } from "@app/components/user/groups/group-table/group-ta
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-groups-page',
   standalone: true,
   imports: [

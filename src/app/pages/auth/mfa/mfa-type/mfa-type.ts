@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgIconsModule } from '@ng-icons/core';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -11,6 +11,7 @@ import { LogoComponent } from '@app/components/logo/Logo';
 import { createMutation } from '@app/core/utils/mutation.helper';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-mfa-type',
   standalone: true,
   imports: [NgIconsModule, ...HlmButtonImports, ...HlmCardImports, LogoComponent],

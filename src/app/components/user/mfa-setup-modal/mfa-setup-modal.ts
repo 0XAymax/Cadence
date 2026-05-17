@@ -1,4 +1,4 @@
-import { Component, input, output, signal, inject, OnInit, DestroyRef } from '@angular/core';
+import { Component, input, output, signal, inject, OnInit, DestroyRef , ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -10,6 +10,7 @@ import { MfaApp } from '@app/core/models/mfa-app.model';
 import { toast } from 'ngx-sonner';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-mfa-setup-modal',
   standalone: true,
   imports: [

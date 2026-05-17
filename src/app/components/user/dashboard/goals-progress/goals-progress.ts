@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-goals-progress',
   imports: [...HlmCardImports],
   templateUrl: './goals-progress.html',

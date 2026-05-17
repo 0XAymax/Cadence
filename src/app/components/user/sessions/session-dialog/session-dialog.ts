@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { applyEach, form, FormField, FormRoot, minLength, required } from '@angular/forms/signals';
 import {
   CreateSessionRequest,
@@ -24,6 +24,7 @@ import {
 } from './load-balancing.utils';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-session-dialog',
   templateUrl: './session-dialog.html',
   imports: [

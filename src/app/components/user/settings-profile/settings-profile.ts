@@ -1,4 +1,4 @@
-import { Component, input, inject, signal, effect } from '@angular/core';
+import { Component, input, inject, signal, effect , ChangeDetectionStrategy } from '@angular/core';
 import { form, FormField, required, FormRoot } from '@angular/forms/signals';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmInputImports } from '@spartan-ng/helm/input';
@@ -17,6 +17,7 @@ import { HlmDialogImports } from '@spartan-ng/helm/dialog';
 import { createMutation } from '@app/core/utils/mutation.helper';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-settings-profile',
   imports: [
     ...HlmButtonImports,

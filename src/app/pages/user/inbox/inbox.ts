@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, computed, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, computed, inject , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '@app/core/services/notification.service';
 import { InboxHeader } from '@app/components/user/inbox/inbox-header/inbox-header';
@@ -9,6 +9,7 @@ import { toast } from 'ngx-sonner';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inbox',
   imports: [CommonModule, InboxHeader, InboxFilters, NotificationsList, LucideAngularModule],
   templateUrl: './inbox.html',

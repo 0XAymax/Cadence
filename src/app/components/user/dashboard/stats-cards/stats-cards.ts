@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { NgIconsModule } from '@ng-icons/core';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-stats-cards',
   imports: [NgIconsModule, ...HlmCardImports],
   templateUrl: './stats-cards.html',

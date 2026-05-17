@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { NgIconsModule } from '@ng-icons/core';
@@ -17,6 +17,7 @@ export interface SubjTask {
 }
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-study-map',
   standalone: true,
   imports: [

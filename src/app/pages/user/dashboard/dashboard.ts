@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , ChangeDetectionStrategy } from '@angular/core';
 import { StatsCards } from '@app/components/user/dashboard/stats-cards/stats-cards';
 import { TodaysSchedule } from '@app/components/user/dashboard/todays-schedule/todays-schedule';
 import { GoalsProgress } from '@app/components/user/dashboard/goals-progress/goals-progress';
@@ -8,6 +8,7 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { NgIconsModule } from '@ng-icons/core';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-dashboard',
   imports: [
     StatsCards,

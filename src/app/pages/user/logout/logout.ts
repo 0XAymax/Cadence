@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject , ChangeDetectionStrategy } from '@angular/core';
 import { AuthService } from '@app/core/services/auth.service';
 import { HlmAlertImports } from '@spartan-ng/helm/alert';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -6,6 +6,7 @@ import { NgIconsModule } from '@ng-icons/core';
 import { Location } from '@angular/common';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-logout',
   imports: [HlmAlertImports, HlmButtonImports, NgIconsModule],
   templateUrl: './logout.html',

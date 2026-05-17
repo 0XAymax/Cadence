@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal , ChangeDetectionStrategy } from '@angular/core';
 import { form, FormField, FormRoot, required } from '@angular/forms/signals';
 import {
   CreateSubjectRequest,
@@ -15,6 +15,7 @@ import { HlmLabelImports } from '@spartan-ng/helm/label';
 import { toast } from 'ngx-sonner';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-subject-form-dialog',
   templateUrl: './subject-form-dialog.html',
   imports: [HlmButtonImports, HlmDialogImports,HlmInputImports,HlmLabelImports, FormRoot, FormField],

@@ -1,4 +1,4 @@
-import { Component, input, signal, effect, inject } from '@angular/core';
+import { Component, input, signal, effect, inject , ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -20,6 +20,7 @@ import { Router } from '@angular/router';
 import { createMutation } from '@app/core/utils/mutation.helper';
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-group-settings-tab',
   standalone: true,
   imports: [
