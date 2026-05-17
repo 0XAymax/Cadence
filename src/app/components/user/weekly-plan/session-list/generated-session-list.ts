@@ -22,6 +22,7 @@ import { SessionService } from '@app/core/services/session.service';
 import { AlertService } from '@app/components/shared/alert/alert.service';
 import { createMutation } from '@app/core/utils/mutation.helper';
 import { toast } from 'ngx-sonner';
+import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/loading-spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,6 +36,7 @@ import { toast } from 'ngx-sonner';
     HlmButtonImports,
     HlmAccordionImports,
     HlmDropdownMenuImports,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './generated-session-list.html',
 })

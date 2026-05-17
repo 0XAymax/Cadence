@@ -25,6 +25,7 @@ import { createMutation } from '@app/core/utils/mutation.helper';
 import { toast } from 'ngx-sonner';
 import { SessionDialogComponent } from '../session-dialog/session-dialog';
 import { Router } from '@angular/router';
+import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/loading-spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -39,6 +40,7 @@ import { Router } from '@angular/router';
     HlmAccordionImports,
     HlmDropdownMenuImports,
     SessionDialogComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './sessions-list.html',
 })

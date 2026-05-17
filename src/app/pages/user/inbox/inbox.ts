@@ -7,11 +7,12 @@ import { NotificationsList } from '@app/components/user/inbox/notifications-list
 import { LucideAngularModule, Loader2, AlertCircle } from 'lucide-angular';
 import { toast } from 'ngx-sonner';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/loading-spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-inbox',
-  imports: [CommonModule, InboxHeader, InboxFilters, NotificationsList, LucideAngularModule],
+  imports: [CommonModule, InboxHeader, InboxFilters, NotificationsList, LucideAngularModule, LoadingSpinnerComponent],
   templateUrl: './inbox.html',
   providers: [NotificationService],
 })

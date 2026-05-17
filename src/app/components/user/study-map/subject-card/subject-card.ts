@@ -14,6 +14,7 @@ import { toast } from 'ngx-sonner';
 import { SubjectService } from '@app/core/services/subject.service';
 import { GoalFormDialogComponent } from "../goal-form-dialog/goal-form-dialog";
 import { SubjectFormDialogComponent } from "../subject-form-dialog/subject-form-dialog";
+import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/loading-spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -30,6 +31,7 @@ import { SubjectFormDialogComponent } from "../subject-form-dialog/subject-form-
     LucideAngularModule,
     GoalFormDialogComponent,
     SubjectFormDialogComponent,
+    LoadingSpinnerComponent,
   ],
   templateUrl: './subject-card.html',
 })

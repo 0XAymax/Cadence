@@ -4,12 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '@app/core/services/session.service';
 import { SessionsCalendarComponent } from '@app/components/user/sessions/sessions-calendar/sessions-calendar';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/loading-spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-session-calendar-page',
   templateUrl: './session-calendar.html',
-  imports: [CommonModule, SessionsCalendarComponent],
+  imports: [CommonModule, SessionsCalendarComponent, LoadingSpinnerComponent],
 })
 export class SessionCalendarComponent {
   readonly sessionService = inject(SessionService);

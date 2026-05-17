@@ -39,10 +39,7 @@
 
   @if (isExpanded()) {
     @if (isLoadingGoals()) {
-      <div class="flex justify-center p-6 text-muted-foreground">
-        <lucide-angular name="loader-2" class="h-6 w-6 animate-spin"></lucide-angular>
-        <span class="ml-2 text-sm">Loading goals...</span>
-      </div>
+      <app-loading-spinner [isLoading]="true"></app-loading-spinner>
     } @else {
       <div class="px-4 pb-5 sm:px-5 sm:pb-5 pt-0 border-t border-border/50 bg-muted/20">
         <div class="flex items-center justify-between mb-4 mt-4">
