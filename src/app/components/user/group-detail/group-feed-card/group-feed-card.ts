@@ -1,7 +1,5 @@
 import { Component, inject, input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { HlmCardImports } from '@spartan-ng/helm/card';
-import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { GroupService } from '@app/core/services/group.service';
 import { SharedSession } from '@app/core/models/session.model';
@@ -28,8 +26,6 @@ import { catchError, throwError } from 'rxjs';
   standalone: true,
   imports: [
     CommonModule,
-    HlmCardImports,
-    HlmBadgeImports,
     LucideAngularModule,
     HlmButtonImports,
     DatePipe,

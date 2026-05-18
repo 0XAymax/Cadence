@@ -1,69 +1,45 @@
-<div hlmCard class="mb-4 w-full rounded-xl border border-border/70 shadow-sm">
-  <div hlmCardHeader class="pb-2">
-    <div class="flex items-start justify-between gap-2">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <div
-          class="bg-muted text-foreground flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold"
-        >
-          {{ session().sharedByUsername.charAt(0).toUpperCase() }}
-        </div>
+<div class="group px-4 py-3 transition-colors duration-150 hover:bg-muted/40">
+  <div class="flex items-start gap-3">
 
-        <div class="min-w-0">
-          <p class="text-sm font-semibold leading-4.5">
-            @if( userId() === session().sharedByUserId) {
-              You
-            } @else {
-              {{ session().sharedByUsername }}
-            }
-            <span class="text-muted-foreground font-normal">shared a session</span>
-          </p>
-          <p class="text-xs text-muted-foreground">
-            {{ session().sharedAt | date: 'mediumDate' }}
-          </p>
-        </div>
+    <!-- User Avatar -->
+    <div
+      class="bg-muted text-foreground mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-semibold">
+      {{ session().sharedByUsername.charAt(0).toUpperCase() }}
+    </div>
+
+    <!-- Content -->
+    <div class="min-w-0 flex-1">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="text-sm font-semibold text-foreground">{{ session().sessionTitle }}</span>
+        <span
+          class="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium bg-muted text-muted-foreground ring-1 ring-inset ring-border/50">
+          Shared by {{ userId() === session().sharedByUserId ? 'You' : session().sharedByUsername }}
+        </span>
       </div>
-      <button
-        hlmBtn
-        variant="ghost"
-        size="icon"
-        class="h-7 w-7 shrink-0"
-        [hlmDropdownMenuTrigger]="sharedSessionMenu"
-        aria-label="Open shared session actions"
-      >
+      <p class="mt-1 text-xs text-muted-foreground/70">
+        {{ session().sharedAt | date: 'mediumDate' }} &bull; View Only
+      </p>
+    </div>
+
+    <!-- Right: Actions -->
+    <div class="flex shrink-0 items-center gap-2">
+      @if (userId() != session().sharedByUserId) {
+      <button hlmBtn size="sm" variant="ghost" class="h-7 text-xs text-muted-foreground hover:text-foreground"
+        [disabled]="forkSessionMutation.isPending() || forkSessionMutation.isSuccess()" (click)="onForkSession()">
+        @if (forkSessionMutation.isPending()) {
+        <lucide-angular [img]="Loader2" class="h-3 w-3 animate-spin mr-1.5"></lucide-angular>
+        } @else {
+        <lucide-angular [img]="GitFork" class="h-3 w-3 mr-1.5"></lucide-angular>
+        }
+        Fork
+      </button>
+      }
+
+      <!-- Dropdown Menu -->
+      <button hlmBtn variant="ghost" size="icon" class="h-7 w-7 text-muted-foreground hover:text-foreground"
+        [hlmDropdownMenuTrigger]="sharedSessionMenu" aria-label="Open shared session actions">
         <lucide-angular [img]="MoreVertical" class="h-4 w-4"></lucide-angular>
       </button>
-    </div>
-  </div>
-
-  <div hlmCardContent class="pt-0 pb-3">
-    <div class="rounded-lg border border-border bg-muted/40 px-3 py-2.5">
-      <div class="flex items-center justify-between gap-2">
-        <div class="min-w-0 space-y-0.5">
-          <h4 class="truncate text-sm font-semibold leading-5">{{ session().sessionTitle }}</h4>
-          <p class="text-xs text-muted-foreground">
-            {{ 'View Only' }}
-          </p>
-        </div>
-        @if (userId() != session().sharedByUserId) {
-          <div class="flex items-center gap-2 shrink-0">
-            <button
-              hlmBtn
-              size="sm"
-              variant="outline"
-              class="h-7 gap-1.5 px-2 text-xs"
-              [disabled]="forkSessionMutation.isPending() || forkSessionMutation.isSuccess()"
-              (click)="onForkSession()"
-            >
-              @if (forkSessionMutation.isPending()) {
-                <lucide-angular [img]="Loader2" class="h-3 w-3 animate-spin"></lucide-angular>
-              } @else {
-                <lucide-angular [img]="GitFork" class="h-3 w-3"></lucide-angular>
-              }
-              Fork
-            </button>
-          </div>
-        }
-      </div>
     </div>
   </div>
 
@@ -74,13 +50,13 @@
         View Session
       </button>
       @if (
-        userId() === session().sharedByUserId || userRole() === 'ADMIN' || userRole() === 'OWNER'
+      userId() === session().sharedByUserId || userRole() === 'ADMIN' || userRole() === 'OWNER'
       ) {
-        <hlm-dropdown-menu-separator></hlm-dropdown-menu-separator>
-        <button hlmDropdownMenuItem class="gap-2 whitespace-nowrap" (click)="onUnshareSession()">
-          <lucide-angular [img]="Trash" class="h-4 w-4"></lucide-angular>
-          Unshare Session
-        </button>
+      <hlm-dropdown-menu-separator></hlm-dropdown-menu-separator>
+      <button hlmDropdownMenuItem class="gap-2 whitespace-nowrap" (click)="onUnshareSession()">
+        <lucide-angular [img]="Trash" class="h-4 w-4"></lucide-angular>
+        Unshare Session
+      </button>
       }
     </hlm-dropdown-menu>
   </ng-template>
