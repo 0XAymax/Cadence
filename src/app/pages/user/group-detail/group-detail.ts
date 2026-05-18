@@ -1,4 +1,12 @@
-import { Component, inject, signal, effect, computed , ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  signal,
+  effect,
+  computed,
+  ChangeDetectionStrategy,
+  DestroyRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '@app/core/services/auth.service';
@@ -16,7 +24,7 @@ import { extractErrorMessage } from '@app/core/utils/error.util';
 import { AlertService } from '@app/components/shared/alert/alert.service';
 import { SessionService } from '@app/core/services/session.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { LoadingSpinnerComponent } from "@app/components/shared/loading-spinner/loading-spinner.component";
+import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/loading-spinner.component';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,8 +40,8 @@ import { LoadingSpinnerComponent } from "@app/components/shared/loading-spinner/
     GroupMembersTabComponent,
     GroupChatTabComponent,
     GroupSettingsTabComponent,
-    LoadingSpinnerComponent
-],
+    LoadingSpinnerComponent,
+  ],
   templateUrl: './group-detail.html',
 })
 export class GroupDetailComponent {
@@ -43,6 +51,7 @@ export class GroupDetailComponent {
   sessionService = inject(SessionService);
   authService = inject(AuthService);
   alertService = inject(AlertService);
+  destroyRef = inject(DestroyRef);
 
   groupId = signal<string>('');
   myRole = computed(() => this.group()?.userRole || null);
@@ -55,20 +64,39 @@ export class GroupDetailComponent {
   readonly sharedSessions = this.sessionService.sharedSessions.data;
   readonly isSharedSessionsLoading = this.sessionService.sharedSessions.isLoading;
 
+  /** Tracks which tabs have already had their data fetched. Feed is pre-seeded as it loads on init. */
+  private readonly loadedTabs = new Set<string>(['feed']);
+
   constructor() {
     this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
       const id = params.get('id');
       if (!id) return;
 
       this.groupId.set(id);
+      // Always load group metadata and feed data on init (feed is the default tab).
       this.groupService.getGroupDataById(id).pipe(takeUntilDestroyed()).subscribe();
-      this.groupService.loadGroupMembers(id).pipe(takeUntilDestroyed()).subscribe();
       this.sessionService.loadSharedSessions(id).pipe(takeUntilDestroyed()).subscribe();
     });
   }
 
-  setActiveTab(tab: any) {
-    this.activeTab.set(tab);
+  setActiveTab(tab: string) {
+    const validTab = tab as 'feed' | 'members' | 'chat' | 'settings';
+    this.activeTab.set(validTab);
+    this.onTabChange(validTab);
+  }
+
+  private onTabChange(tab: string) {
+    if (this.loadedTabs.has(tab)) return;
+    this.loadedTabs.add(tab);
+
+    const id = this.groupId();
+    if (!id) return;
+
+    if (tab === 'members') {
+      this.groupService.loadGroupMembers(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+    }
+    // 'chat' — WebSocket is established by app-group-chat-tab on first render.
+    // 'settings' — uses already-loaded group/members data; no extra fetch needed.
   }
 
   get canLeaveGroup(): boolean {

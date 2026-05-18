@@ -20,13 +20,15 @@
 
       <div class="flex gap-2">
         @if (canLeaveGroup) {
-          <button hlmBtn variant="destructive" size="sm" (click)="onLeaveGroupClick()">Leave group</button>
+          <button hlmBtn variant="destructive" size="sm" (click)="onLeaveGroupClick()">
+            Leave group
+          </button>
         }
       </div>
     </div>
 
     <!-- Layout Tabs -->
-    <hlm-tabs [tab]="activeTab()" (tabChanged)="setActiveTab($event)">
+    <hlm-tabs [tab]="activeTab()" (tabActivated)="setActiveTab($event)">
       <hlm-tabs-list aria-label="tabs" class="w-full sm:w-auto overflow-x-auto justify-start">
         <button hlmTabsTrigger="feed">Feed</button>
         <button hlmTabsTrigger="members">Members</button>
@@ -36,40 +38,38 @@
         }
       </hlm-tabs-list>
 
-      <!-- Feed Tab -->
-      <div hlmTabsContent="feed" class="mt-6 space-y-6">
-        <div
-          class="flex justify-between items-center bg-muted/30 p-4 rounded-lg border border-border"
-        >
-          <p class="text-sm font-medium">Have something to share?</p>
-          <button hlmBtn (click)="shareDialogState.set('open')">Share a session</button>
-        </div>
+      <!-- Feed Tab — always rendered (default tab, data loaded on init) -->
+      @if (activeTab() === 'feed') {
+        <div class="mt-6 space-y-6">
+          <div
+            class="flex justify-between items-center bg-muted/30 p-4 rounded-lg border border-border"
+          >
+            <p class="text-sm font-medium">Have something to share?</p>
+            <button hlmBtn (click)="shareDialogState.set('open')">Share a session</button>
+          </div>
 
-        @if (isSharedSessionsLoading()) {
-          <app-loading-spinner [isLoading]="true"></app-loading-spinner>
-        } @else if(groupService.currentUserId(); as userId) {
-        <div class="space-y-4">
-          @for (session of sharedSessions(); track session.sessionId) {
-            <app-group-feed-card
-              [session]="session"
-              [userId]="userId"
-              [userRole]="myRole()"
-            >
-            </app-group-feed-card>
-          } @empty {
-            <div class="py-12 text-center border rounded-lg border-dashed">
-              <p class="text-muted-foreground text-sm">No sessions shared yet in this group.</p>
+          @if (isSharedSessionsLoading()) {
+            <app-loading-spinner [isLoading]="true"></app-loading-spinner>
+          } @else if (groupService.currentUserId(); as userId) {
+            <div class="space-y-4">
+              @for (session of sharedSessions(); track session.sessionId) {
+                <app-group-feed-card [session]="session" [userId]="userId" [userRole]="myRole()">
+                </app-group-feed-card>
+              } @empty {
+                <div class="py-12 text-center border rounded-lg border-dashed">
+                  <p class="text-muted-foreground text-sm">No sessions shared yet in this group.</p>
+                </div>
+              }
             </div>
           }
         </div>
-        }
-      </div>
+      }
 
-      <!-- Members Tab -->
-      @if (isMembersLoading()) {
-        <app-loading-spinner [isLoading]="true"></app-loading-spinner>
-      } @else if (groupService.currentUserId(); as userId){
-        <div hlmTabsContent="members">
+      <!-- Members Tab — rendered only when active; data fetched lazily on first activation -->
+      @if (activeTab() === 'members') {
+        @if (isMembersLoading()) {
+          <app-loading-spinner [isLoading]="true"></app-loading-spinner>
+        } @else if (groupService.currentUserId(); as userId) {
           <app-group-members-tab
             [members]="members()"
             [currentUserRole]="myRole()"
@@ -77,21 +77,25 @@
             [groupId]="groupId()"
           >
           </app-group-members-tab>
+        }
+      }
+
+      <!-- Chat Tab — rendered only when active; WebSocket connects on first activation -->
+      @if (activeTab() === 'chat') {
+        <div class="mt-4 border rounded-lg bg-card">
+          @if (groupId() && myRole()) {
+            <app-group-chat-tab
+              [currentUserId]="groupService.currentUserId()!"
+              [groupId]="groupId()"
+            >
+            </app-group-chat-tab>
+          }
         </div>
       }
 
-      <!-- CHAT TAB -->
-      <div hlmTabsContent="chat" class="mt-4 border rounded-lg bg-card">
-        @if (groupId() && myRole()) {
-          <app-group-chat-tab [currentUserId]="groupService.currentUserId()!" [groupId]="groupId()">
-          </app-group-chat-tab>
-        }
-      </div>
-
-      <!-- SETTINGS TAB (Admin Only via routing/permissions, but guarded by visibility or mock) -->
-      <!-- For now, display it and internally the tab controls admin views -->
-      @if (myRole() === 'ADMIN' || myRole() === 'OWNER') {
-        <div hlmTabsContent="settings" class="mt-4">
+      <!-- Settings Tab — rendered only when active AND user is Admin/Owner -->
+      @if (activeTab() === 'settings' && (myRole() === 'ADMIN' || myRole() === 'OWNER')) {
+        <div class="mt-4">
           <app-group-settings-tab
             [group]="group()!"
             [members]="members()"
