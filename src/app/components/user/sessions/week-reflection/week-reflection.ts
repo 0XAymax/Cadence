@@ -80,7 +80,7 @@ export class WeekReflectionComponent implements OnInit {
       if (s.status === 'COMPLETED') {
         subjectCompleted.set(s.subjectName, (subjectCompleted.get(s.subjectName) || 0) + 1);
       }
-      if (s.status === 'INCOMPLETED' || s.status === 'CLOSED') {
+      if (s.status === 'INCOMPLETED') {
         subjectMissed.set(s.subjectName, (subjectMissed.get(s.subjectName) || 0) + 1);
       }
     });
@@ -118,8 +118,6 @@ export class WeekReflectionComponent implements OnInit {
         return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/40 dark:text-green-300 dark:border-green-800';
       case 'INCOMPLETED':
         return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800';
-      case 'CLOSED':
-        return 'bg-muted text-muted-foreground border-border opacity-80';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }

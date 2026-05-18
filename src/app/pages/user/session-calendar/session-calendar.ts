@@ -1,4 +1,4 @@
-import { Component, inject, signal , ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { SessionService } from '@app/core/services/session.service';
@@ -15,14 +15,14 @@ import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/
 export class SessionCalendarComponent {
   readonly sessionService = inject(SessionService);
   route = inject(ActivatedRoute);
-  private destroyRef = takeUntilDestroyed();
+  private destroyRef = inject(DestroyRef);
 
   sessionId = signal<string | null>(null);
   sessionDetails = this.sessionService.sessionDetails.data;
   isLoading = this.sessionService.sessionDetails.isLoading;
 
   ngOnInit() {
-    this.route.paramMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
       const id = params.get('id');
       if (id) {
         this.sessionId.set(id);
@@ -32,8 +32,9 @@ export class SessionCalendarComponent {
   }
 
   loadSession(id: string) {
-    this.sessionService.loadSessionDetails(id)
-      .pipe(takeUntilDestroyed())
+    this.sessionService
+      .loadSessionDetails(id)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }
 

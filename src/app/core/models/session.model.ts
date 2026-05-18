@@ -4,7 +4,7 @@ export interface CreateWeeklySessionResponse {
   title: string;
   weekNumber: number;
   weekYear: number;
-  sessionStatus: 'PENDING' | 'COMPLETED' | 'INCOMPLETED' | 'CLOSED';
+  sessionStatus: 'PENDING' | 'COMPLETED' | 'INCOMPLETED';
 }
 
 export interface CreateSubSessionResponse {
@@ -12,7 +12,7 @@ export interface CreateSubSessionResponse {
   dayOfWeek: 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
   startTime: string;
   endTime: string;
-  status: 'PENDING' | 'COMPLETED' | 'INCOMPLETED' | 'CLOSED';
+  status: 'PENDING' | 'COMPLETED' | 'INCOMPLETED';
   subjectId: string;
   subjectName: string;
 }

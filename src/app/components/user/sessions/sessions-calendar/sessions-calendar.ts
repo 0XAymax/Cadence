@@ -78,8 +78,6 @@ export class SessionsCalendarComponent {
         return 'ring-2 ring-green-200';
       case 'INCOMPLETED':
         return 'ring-2 ring-red-200';
-      case 'CLOSED':
-        return 'ring-2 ring-gray-200';
       default:
         return '';
     }

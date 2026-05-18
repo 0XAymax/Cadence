@@ -71,7 +71,7 @@ export class SessionsListComponent {
   }
 
   isReflectable(status: string): boolean {
-    return status === 'CLOSED' || status === 'INCOMPLETED';
+    return status === 'INCOMPLETED';
   }
 
   onCardClick(event: Event, session: any) {
@@ -159,8 +159,6 @@ export class SessionsListComponent {
         return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/40 dark:text-green-300 dark:border-green-800 hover:bg-green-200 dark:hover:bg-green-900/60';
       case 'INCOMPLETED':
         return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800 hover:bg-red-200 dark:hover:bg-red-900/60';
-      case 'CLOSED':
-        return 'bg-muted text-muted-foreground border-border opacity-80 hover:bg-muted/80';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
     }
@@ -169,8 +167,6 @@ export class SessionsListComponent {
   getBadgeVariant(status: string): any {
     switch (status) {
       case 'COMPLETED':
-      case 'CLOSED':
-        return 'default';
       case 'INCOMPLETED':
         return 'destructive';
       case 'IN_PROGRESS':

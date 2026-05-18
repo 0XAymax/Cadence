@@ -101,8 +101,6 @@ export class GeneratedSessionsListComponent {
   getBadgeVariant(status: string): any {
     switch (status) {
       case 'COMPLETED':
-      case 'CLOSED':
-        return 'default';
       case 'INCOMPLETED':
         return 'destructive';
       case 'IN_PROGRESS':
