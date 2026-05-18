@@ -10,6 +10,40 @@
 
   @if (profile(); as currentUser) {
   <div class="space-y-12">
+    <!-- Appearance Section -->
+    <section class="space-y-4">
+      <div class="space-y-2">
+        <h2 class="text-xl font-semibold">Appearance</h2>
+        <p class="text-sm text-muted-foreground">
+          Customize the look and feel of the platform.
+        </p>
+      </div>
+      <div class="md:w-2/3 border rounded-xl p-6 md:p-8 bg-card text-card-foreground shadow-sm">
+        <div class="flex items-center space-x-4">
+          <button
+            type="button"
+            (click)="themeService.setTheme('light')"
+            class="flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors font-medium text-sm"
+            [ngClass]="themeService.theme() === 'light' ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:bg-accent'"
+          >
+            <ng-icon name="lucideSun" size="1.1rem"></ng-icon>
+            Light Mode
+          </button>
+          <button
+            type="button"
+            (click)="themeService.setTheme('dark')"
+            class="flex items-center gap-2 px-4 py-2 border rounded-lg transition-colors font-medium text-sm"
+            [ngClass]="themeService.theme() === 'dark' ? 'border-primary bg-primary/10 text-primary' : 'border-border hover:bg-accent'"
+          >
+            <ng-icon name="lucideMoon" size="1.1rem"></ng-icon>
+            Dark Mode
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-border hidden md:block"></div>
+
     <!-- Profile Section -->
     <section class="space-y-4">
       <div class="space-y-2">
@@ -54,6 +88,22 @@
   </div>
   } @else {
   <div class="space-y-12">
+    <!-- Appearance Section Skeleton -->
+    <section class="flex flex-col md:flex-row gap-6 md:gap-12">
+      <div class="md:w-1/3 space-y-2">
+        <hlm-skeleton class="h-6 w-3/4 mb-2"></hlm-skeleton>
+        <hlm-skeleton class="h-4 w-full"></hlm-skeleton>
+      </div>
+      <div class="md:w-2/3 border rounded-xl p-6 md:p-8 bg-card shadow-sm space-y-6">
+        <div class="flex gap-4">
+          <hlm-skeleton class="h-10 w-32"></hlm-skeleton>
+          <hlm-skeleton class="h-10 w-32"></hlm-skeleton>
+        </div>
+      </div>
+    </section>
+
+    <div class="w-full h-px bg-border hidden md:block"></div>
+
     <!-- Profile Section Skeleton -->
     <section class="flex flex-col md:flex-row gap-6 md:gap-12">
       <div class="md:w-1/3 space-y-2">

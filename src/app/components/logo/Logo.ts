@@ -1,5 +1,6 @@
-import { Component, Input , ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, inject } from '@angular/core';
 import { NgOptimizedImage } from '@angular/common';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -7,7 +8,7 @@ import { NgOptimizedImage } from '@angular/common';
   imports: [NgOptimizedImage],
   template: `
     <img
-      ngSrc="LogoDark.webp"
+      [ngSrc]="themeService.theme() === 'dark' ? 'LogoDark.webp' : 'WhiteMode.webp'"
       alt="Cadence"
       [class]="'w-auto ' + sizeClass"
       [width]="width"
@@ -17,6 +18,7 @@ import { NgOptimizedImage } from '@angular/common';
   `,
 })
 export class LogoComponent {
+  public themeService = inject(ThemeService);
   @Input() size: 'sm' | 'md' | 'lg' = 'md';
 
   get sizeClass() {
