@@ -14,6 +14,7 @@ import { HlmInputImports } from '@spartan-ng/helm/input';
 import { HlmIconImports } from '@spartan-ng/helm/icon';
 import { lucideSend, lucideAlertCircle } from '@ng-icons/lucide';
 import { provideIcons } from '@ng-icons/core';
+import { HlmAvatarImports } from '@spartan-ng/helm/avatar';
 import { ChatService } from '@app/core/services/chat.service';
 import { LoadingSpinnerComponent } from '@app/components/shared/loading-spinner/loading-spinner.component';
 import { effect } from '@angular/core';
@@ -22,13 +23,15 @@ import { effect } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-group-chat-tab',
   standalone: true,
-  imports: [CommonModule, FormsModule, HlmButtonImports, HlmInputImports, HlmIconImports, DatePipe, LoadingSpinnerComponent],
+  imports: [CommonModule, FormsModule, HlmButtonImports, HlmInputImports, HlmIconImports, HlmAvatarImports, DatePipe, LoadingSpinnerComponent],
   providers: [provideIcons({ lucideSend, lucideAlertCircle })],
   templateUrl: './group-chat-tab.html',
 })
 export class GroupChatTabComponent implements OnInit, OnDestroy {
   currentUserId = input.required<string>();
   groupId = input.required<string>();
+  groupName = input<string>('');
+  memberCount = input<number>(0);
 
   private chatService = inject(ChatService);
 
@@ -139,5 +142,51 @@ export class GroupChatTabComponent implements OnInit, OnDestroy {
           this.scrollContainer.nativeElement.scrollHeight;
       } catch (err) {}
     }
+  }
+
+  /** Returns 'AB' initials from first + last name. */
+  getInitials(firstName: string, lastName: string): string {
+    return `${firstName.charAt(0).toUpperCase()}${lastName.charAt(0).toUpperCase()}`;
+  }
+
+  /**
+   * Derives a consistent muted Tailwind-compatible bg color class from the sender's id.
+   * Cycles through a palette of 8 muted hues.
+   */
+  getAvatarColor(senderId: string): string {
+    const palette = [
+      'bg-rose-400/70',
+      'bg-orange-400/70',
+      'bg-amber-400/70',
+      'bg-emerald-400/70',
+      'bg-teal-400/70',
+      'bg-sky-400/70',
+      'bg-violet-400/70',
+      'bg-pink-400/70',
+    ];
+    let hash = 0;
+    for (let i = 0; i < senderId.length; i++) {
+      hash = senderId.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return palette[Math.abs(hash) % palette.length];
+  }
+
+  /** Groups messages by calendar day label (Today / Yesterday / date string). */
+  getDateLabel(sentAt: string): string {
+    const date = new Date(sentAt);
+    const now = new Date();
+    const diff = now.setHours(0, 0, 0, 0) - new Date(date).setHours(0, 0, 0, 0);
+    if (diff === 0) return 'Today';
+    if (diff === 86_400_000) return 'Yesterday';
+    return date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+  }
+
+  /** Returns true when this message starts a new calendar day vs the previous one. */
+  isNewDay(index: number): boolean {
+    const msgs = this.messages();
+    if (index === 0) return true;
+    const prev = new Date(msgs[index - 1].sentAt).toDateString();
+    const curr = new Date(msgs[index].sentAt).toDateString();
+    return prev !== curr;
   }
 }

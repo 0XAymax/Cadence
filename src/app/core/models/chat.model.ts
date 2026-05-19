@@ -2,10 +2,12 @@ export interface GroupMessageResponse {
   id: string;
   groupId: string;
   senderId: string;
+  groupName: string;
   senderFirstName: string;
   senderLastName: string;
   content: string;
   sentAt: string;
+  senderProfilePic: string | null;
 }
 
 export interface SendGroupMessageRequest {
