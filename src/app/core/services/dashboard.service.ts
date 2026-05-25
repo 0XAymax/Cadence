@@ -20,6 +20,46 @@ export interface StackedAreaChartData {
   incompletedSubSession: SubSessionData[];
 }
 
+export interface DoughnutChartData {
+  highPSubject: number;
+  mediumPSubject: number;
+  lowPSubject: number;
+}
+
+export interface HeatmapSubSessionData {
+  creationHour: string;
+  subSessionCount: number;
+}
+
+export interface HeatmapDayData {
+  dayOfWeek: string;
+  subSessionData: HeatmapSubSessionData[];
+}
+
+export interface HeatmapChartData {
+  localDateTime: string;
+  heatMapChartData: HeatmapDayData[];
+}
+
+export interface HeatmapRequestPayload {
+  weekNumber: number;
+  year: number;
+}
+
+export interface TopGroupData {
+  name: string;
+  groupPrivacy: 'PUBLIC' | 'PRIVATE';
+  memberscount: number;
+}
+
+export interface MFAActivityData {
+  username: string;
+  type: 'NONE' | string;
+  attempts: number;
+  time: string;
+  isUsed: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   private readonly apiUrl = `${environment.apiUrl}/admin/dashboard`;
@@ -31,5 +71,21 @@ export class DashboardService {
 
   getStackedAreaChartData() {
     return this.http.get<StackedAreaChartData>(`${this.apiUrl}/charts/stackedArea`);
+  }
+
+  getDoughnutChartData() {
+    return this.http.get<DoughnutChartData>(`${this.apiUrl}/charts/doughnut`);
+  }
+
+  getHeatmapChartData(payload: HeatmapRequestPayload) {
+    return this.http.post<HeatmapChartData>(`${this.apiUrl}/charts/heatMap`, payload);
+  }
+
+  getTopGroups() {
+    return this.http.get<TopGroupData[]>(`${this.apiUrl}/tables/topGroups`);
+  }
+
+  getMFAActivities() {
+    return this.http.get<MFAActivityData[]>(`${this.apiUrl}/tables/mfaActivities`);
   }
 }
