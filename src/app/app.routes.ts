@@ -173,6 +173,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/admin/users/users').then((m) => m.AdminUsers),
       },
       {
+        path: 'groups',
+        loadComponent: () => import('./pages/admin/groups/groups').then((m) => m.AdminGroups),
+      },
+      {
         path: 'logout',
         loadComponent: () => import('./pages/user/logout/logout').then((m) => m.LogoutComponent),
       },

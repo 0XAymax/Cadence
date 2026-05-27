@@ -10,6 +10,7 @@ import {
   lucideSearch,
   lucideSettings,
   lucideLogOut,
+  lucideUser,
   lucideUsers,
   lucideMap,
   lucideClock,
@@ -87,6 +88,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       lucideBookOpen,
       lucideGoal,
       lucideLogOut,
+      lucideUser,
       lucideUsers,
       lucideMap,
       lucideClock,
@@ -108,6 +110,11 @@ export class AppSidebar {
     {
       title: 'User Management',
       url: 'users',
+      icon: 'lucideUser',
+    },
+    {
+      title: 'Group Management',
+      url: 'groups',
       icon: 'lucideUsers',
     },
   ];

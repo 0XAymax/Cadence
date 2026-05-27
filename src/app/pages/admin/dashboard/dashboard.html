@@ -1,3 +1,42 @@
-<div >
-    ADMIN DASHBOARD
+<div class="min-h-screen bg-background p-6 md:p-8">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-foreground">Admin Dashboard</h1>
+    <p class="text-muted-foreground mt-2">Monitor platform statistics and activity</p>
+  </div>
+
+  <!-- Dashboard Cards -->
+  <div class="mb-8">
+    <app-dashboard-cards />
+  </div>
+
+  <!-- Heatmap Chart -->
+  <div class="mb-8">
+    <app-heatmap-chart />
+  </div>
+
+  <!-- Charts Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    <!-- Stacked Area Chart -->
+    <div>
+      <app-stacked-area-chart />
+    </div>
+
+    <!-- Doughnut Chart -->
+    <div>
+      <app-doughnut-chart />
+    </div>
+  </div>
+
+  <!-- Top Groups Table -->
+  <div class="mb-8">
+    <app-top-groups-table />
+  </div>
+
+  <!-- MFA Activities Table -->
+  <div class="mb-8">
+    <app-mfa-activities-table />
+  </div>
+
+  <!-- Charts and Tables (to be added) -->
 </div>

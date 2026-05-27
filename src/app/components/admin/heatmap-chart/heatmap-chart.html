@@ -1,0 +1,24 @@
+<div hlmCard class="border border-border rounded-lg w-full">
+  <div hlmCardContent class="pt-6 pb-4 px-4">
+    <!-- Header -->
+    <div class="mb-6">
+      <h3 class="text-lg font-semibold text-foreground">Subsession Creation Heatmap</h3>
+      <p class="text-sm text-muted-foreground mt-1">When users create subsessions throughout the week</p>
+    </div>
+
+    <!-- Chart -->
+    @if (isLoading()) {
+      <div class="h-96">
+        <hlm-skeleton class="h-full w-full rounded" />
+      </div>
+    } @else if (chartOptions()) {
+      <div class="h-auto w-full" style="min-height: 450px;">
+        <div echarts [options]="chartOptions()!" class="w-full h-full"></div>
+      </div>
+    } @else {
+      <div class="h-96 flex items-center justify-center text-muted-foreground">
+        <p>No data available</p>
+      </div>
+    }
+  </div>
+</div>
